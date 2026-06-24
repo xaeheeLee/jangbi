@@ -28,8 +28,11 @@ CAFFEINATE_PID=$!
 trap 'kill "$CAFFEINATE_PID" 2>/dev/null; echo; echo "■ 잠자기 방지 해제, 세션 종료"' EXIT
 echo "  ✅ 잠자기 방지 시작 (caffeinate, PID $CAFFEINATE_PID)"
 
-# 3) 리모트 컨트롤 세션 열기 (폰/브라우저에서 접속)
+# 3) 리모트 컨트롤 세션 열기
+#    같은 claude.ai 계정이면 폰 Claude 앱 Code 탭에 "전중배 dev"가 자동으로 뜸 → 탭해서 연결.
+#    QR/세션URL은 다른 계정·브라우저(claude.ai/code)용 폴백일 뿐 스캔 불필요.
 cd "$PROJECT/app" || cd "$PROJECT"
-echo "  ▶ 리모트 세션 여는 중... (QR/세션URL이 표시되면 폰 Claude 앱에서 접속)"
+echo "  ▶ 리모트 세션 여는 중..."
+echo "    → 폰 Claude 앱 Code 탭에 '$SESSION_NAME' 가 뜨면 탭해서 연결 (QR 불필요)"
 echo
 claude remote-control --name "$SESSION_NAME"
