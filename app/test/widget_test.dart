@@ -4,10 +4,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:jangbinara/app.dart';
 
 void main() {
-  testWidgets('앱 골격이 렌더되고 타이틀이 보인다', (WidgetTester tester) async {
+  testWidgets('Supabase 미설정 시 홈 셸이 렌더되고 하단 탭이 보인다',
+      (WidgetTester tester) async {
     await tester.pumpWidget(const ProviderScope(child: JangbinaraApp()));
     await tester.pumpAndSettle();
 
-    expect(find.text('전국중장비배차'), findsOneWidget);
+    // 하단 5탭 라벨이 보인다.
+    expect(find.text('일감'), findsWidgets);
+    expect(find.text('지갑'), findsOneWidget);
+    expect(find.text('MY'), findsOneWidget);
   });
 }

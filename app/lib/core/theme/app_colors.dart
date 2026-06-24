@@ -3,17 +3,38 @@ import 'package:flutter/material.dart';
 /// 전중배 디자인 토큰 — CLAUDE.md 절대원칙 #4.
 /// 색상 하드코딩 금지. UI에서는 반드시 이 상수를 사용한다.
 abstract final class AppColors {
+  // 기존 토큰 (유지)
   static const primary = Color(0xFF002F6C);
   static const primaryLight = Color(0xFF3B82F6);
   static const primaryBg = Color(0xFFEFF6FF);
 
-  // 보조 토큰 (목업 기준, 필요 시 확장)
-  static const surface = Color(0xFFFFFFFF);
-  static const background = Color(0xFFF8FAFC);
-  static const textPrimary = Color(0xFF0F172A);
-  static const textSecondary = Color(0xFF64748B);
-  static const border = Color(0xFFE2E8F0);
-  static const success = Color(0xFF16A34A);
-  static const warning = Color(0xFFF59E0B);
-  static const danger = Color(0xFFDC2626);
+  // 목업 실측 토큰 (P1)
+  static const navy = Color(0xFF002F6C);
+  static const navyLight = Color(0xFF013A85);
+  static const blue = Color(0xFF3B82F6);
+  static const blueInk = Color(0xFF1D4ED8);
+  static const red = Color(0xFFDC2626);
+  static const orange = Color(0xFFF97316);
+
+  static const bg = Color(0xFFF7F8FA);
+  static const ink = Color(0xFF101622);
+  static const ink2 = Color(0xFF5A6473);
+  static const ink3 = Color(0xFF9AA3B2);
+  static const line = Color(0xFFEAEDF2);
+  static const card = Color(0xFFFFFFFF);
+
+  static const okBg = Color(0xFFE7F6EC);
+  static const okFg = Color(0xFF15803D);
+  static const revBg = Color(0xFFFCF0D8);
+  static const revFg = Color(0xFFB45309);
+
+  // 호환용 별칭 (기존 코드 참조 유지)
+  static const surface = card;
+  static const background = bg;
+  static const textPrimary = ink;
+  static const textSecondary = ink2;
+  static const border = line;
+  static const success = okFg;
+  static const warning = orange;
+  static const danger = red;
 }
