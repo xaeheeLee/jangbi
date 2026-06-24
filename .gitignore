@@ -1,0 +1,26 @@
+# mockups/Mockup_0425 는 자체 git 저장소(xaeheelee-sketch/Mockup_0425)로 별도 관리
+mockups/Mockup_0425/
+
+# Claude Code 로컬 설정
+.claude/settings.local.json
+
+# macOS
+.DS_Store
+
+# Flutter / Dart (추후 코드 추가 시 대비)
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.iml
+.idea/
+
+# 환경변수 / 비밀키
+.env
+.env.*
+*.key
+
+# 대용량 회의 녹화 (GitHub 100MB 초과 — 로컬 보관)
+docs/KakaoTalk_20260609_102535107.mp4
+*.mp4

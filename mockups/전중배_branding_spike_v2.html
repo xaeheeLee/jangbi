@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전중배 — 브랜딩 시안 v2 (로고 + 빨강) 3안</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --navy:#002F6C; --navy2:#0A3D85; --blue:#3B82F6; --bg-blue:#EFF6FF;
+  --red:#E11D2A; --red-soft:#FDECEE;
+  --bg:#EEF1F6; --card:#fff; --border:#E6EBF1;
+  --text:#16181D; --sub:#697586; --dim:#A4ADBA; --ok:#16A34A;
+  --r:16px; --shadow:0 2px 10px rgba(2,32,71,.06);
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Pretendard Variable',Pretendard,system-ui,sans-serif;}
+body{background:var(--bg);color:var(--text);padding:30px 18px 70px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+
+.page-head{max-width:1180px;margin:0 auto 30px;}
+.page-head h1{font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-0.6px;}
+.page-head p{font-size:13px;color:var(--sub);margin-top:7px;line-height:1.65;}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+.legend .tag{font-size:12px;font-weight:700;padding:8px 13px;border-radius:10px;border:1px solid var(--border);background:#fff;box-shadow:var(--shadow);}
+.legend .tag b{color:var(--red);}
+.note{margin-top:14px;font-size:12px;color:#7a5b12;background:#FFF7E6;border:1px solid #F6E2AE;padding:11px 13px;border-radius:10px;line-height:1.65;}
+.note code{background:#fbeec6;padding:1px 5px;border-radius:4px;font-size:11px;}
+
+.compare{display:flex;gap:30px;justify-content:center;align-items:flex-start;flex-wrap:wrap;max-width:1180px;margin:0 auto;}
+.col{flex:0 0 auto;}
+.col-head{text-align:center;margin-bottom:16px;}
+.col-head .name{font-size:15px;font-weight:800;color:var(--navy);}
+.col-head .name b{color:var(--red);}
+.col-head .desc{font-size:11.5px;color:var(--sub);margin-top:4px;max-width:330px;line-height:1.55;}
+.stack{display:flex;flex-direction:column;gap:26px;}
+
+/* phone */
+.phone{width:336px;height:712px;background:#0b0b0d;border-radius:42px;padding:11px;box-shadow:0 18px 44px rgba(2,32,71,.20),0 4px 10px rgba(2,32,71,.12);}
+.screen{width:100%;height:100%;background:#fff;border-radius:31px;overflow:hidden;position:relative;display:flex;flex-direction:column;}
+/* status bar */
+.sb{flex:0 0 auto;height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:12px;font-weight:700;}
+.sb .ic{display:flex;gap:5px;align-items:center;}
+.sb .ic svg{width:15px;height:15px;}
+.sb.on-navy{color:#fff;}
+.sb.on-light{color:var(--text);}
+
+/* theming per variant */
+.variant-a{ --cta-bg:var(--red); --cta-fg:#fff; --accent:var(--red); --logo-accent:var(--red); --priority-cta:var(--red); --chip-on:var(--red); --chip-on-bg:var(--red-soft);}
+.variant-b{ --cta-bg:var(--navy); --cta-fg:#fff; --accent:var(--navy); --logo-accent:var(--red); --priority-cta:var(--navy); --chip-on:var(--navy); --chip-on-bg:var(--bg-blue);}
+.variant-c{ --cta-bg:var(--navy); --cta-fg:#fff; --accent:var(--blue); --logo-accent:var(--red); --priority-cta:var(--red); --chip-on:var(--navy); --chip-on-bg:var(--bg-blue);}
+
+/* logo lockup */
+.logo{display:flex;align-items:center;gap:10px;}
+.logo .emblem{width:40px;height:40px;border-radius:11px;background:linear-gradient(145deg,var(--navy2),var(--navy));display:flex;align-items:center;justify-content:center;flex:0 0 auto;box-shadow:0 3px 8px rgba(0,47,108,.25);}
+.logo .emblem svg{width:23px;height:23px;}
+.logo .wm{line-height:1;}
+.logo .wm .kr{font-size:19px;font-weight:900;letter-spacing:-1.2px;color:var(--navy);display:inline-flex;align-items:baseline;}
+.logo .wm .kr i{color:var(--logo-accent);font-style:normal;}
+.logo .wm .kr .dot{width:5px;height:5px;border-radius:50%;background:var(--logo-accent);margin-left:3px;align-self:flex-end;margin-bottom:3px;}
+.logo .wm .en{font-size:8px;font-weight:800;letter-spacing:2px;color:var(--dim);margin-top:4px;}
+.logo.on-navy .wm .kr{color:#fff;}
+.logo.on-navy .wm .en{color:rgba(255,255,255,.65);}
+.logo.on-navy .emblem{background:rgba(255,255,255,.16);box-shadow:none;}
+
+/* ============ LOGIN ============ */
+.login{flex:1;display:flex;flex-direction:column;background:#fff;min-height:0;}
+.login-top{flex:0 0 auto;background:linear-gradient(160deg,var(--navy2) 0%,var(--navy) 70%);padding:14px 26px 34px;position:relative;overflow:hidden;}
+.deco{position:absolute;border-radius:50%;}
+.deco.d1{width:170px;height:170px;top:-60px;right:-50px;background:rgba(255,255,255,.05);}
+.deco.d2{width:110px;height:110px;bottom:-40px;right:30px;background:radial-gradient(circle,rgba(225,29,42,.22),transparent 70%);}
+.deco.d3{width:60px;height:60px;top:40px;right:80px;background:rgba(255,255,255,.04);}
+.login-hero{margin-top:32px;position:relative;z-index:2;}
+.login-hero h1{font-size:27px;font-weight:900;color:#fff;line-height:1.3;letter-spacing:-1px;}
+.login-hero h1 span{color:var(--logo-accent);}
+.login-hero p{font-size:13px;color:rgba(255,255,255,.8);margin-top:11px;letter-spacing:-0.2px;}
+.login-form{flex:1;min-height:0;padding:26px 24px 20px;display:flex;flex-direction:column;}
+.fld{margin-bottom:14px;}
+.fld label{display:block;font-size:11.5px;font-weight:700;color:var(--sub);margin-bottom:7px;}
+.input{position:relative;}
+.input input{width:100%;height:48px;border:1.5px solid var(--border);background:#F6F8FB;border-radius:12px;padding:0 14px;font-size:13.5px;color:var(--text);}
+.input input:focus{outline:none;border-color:var(--navy);background:#fff;box-shadow:0 0 0 3px rgba(0,47,108,.08);}
+.login-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--sub);margin:3px 0 18px;}
+.login-row label{display:flex;align-items:center;gap:6px;}
+.login-row input{accent-color:var(--navy);}
+.login-row .find{color:var(--accent);font-weight:700;}
+.btn{width:100%;height:50px;border:none;border-radius:13px;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:-0.3px;}
+.btn-primary{background:var(--cta-bg);color:var(--cta-fg);box-shadow:0 8px 18px rgba(0,47,108,.16);}
+.signup{text-align:center;font-size:12.5px;color:var(--sub);margin-top:18px;}
+.signup a{color:var(--accent);font-weight:800;}
+.divider{margin:auto 0 16px;text-align:center;font-size:9.5px;font-weight:800;letter-spacing:2.5px;color:var(--dim);position:relative;padding-top:22px;}
+.divider::before,.divider::after{content:"";position:absolute;top:calc(50% + 11px);width:50px;height:1px;background:var(--border);}
+.divider::before{left:24px;} .divider::after{right:24px;}
+.trust{display:flex;justify-content:space-around;}
+.trust .it{display:flex;flex-direction:column;align-items:center;gap:7px;}
+.trust .ic2{width:42px;height:42px;border-radius:13px;background:var(--bg-blue);display:flex;align-items:center;justify-content:center;}
+.trust .ic2 svg{width:20px;height:20px;stroke:var(--navy);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.trust span{font-size:11px;font-weight:700;color:var(--sub);}
+
+/* ============ LIST ============ */
+.list{flex:1;display:flex;flex-direction:column;background:var(--bg);min-height:0;}
+.appbar{flex:0 0 auto;background:#fff;padding:8px 18px 14px;display:flex;align-items:center;justify-content:space-between;}
+.bell{position:relative;width:34px;height:34px;border-radius:10px;background:#F6F8FB;display:flex;align-items:center;justify-content:center;}
+.bell svg{width:20px;height:20px;stroke:var(--navy);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.bell .dot{position:absolute;top:6px;right:7px;width:8px;height:8px;border-radius:50%;background:var(--red);border:1.5px solid #fff;}
+.filters{flex:0 0 auto;display:flex;gap:8px;padding:6px 16px 14px;background:#fff;overflow-x:auto;border-bottom:1px solid var(--border);}
+.filters::-webkit-scrollbar{display:none;}
+.chip{flex:0 0 auto;font-size:12px;font-weight:700;padding:8px 13px;border-radius:20px;border:1.4px solid var(--border);background:#fff;color:var(--sub);}
+.chip.on{border-color:var(--chip-on);background:var(--chip-on-bg);color:var(--chip-on);}
+.cards{flex:1;min-height:0;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;}
+.cards::-webkit-scrollbar{display:none;}
+.jc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:15px;position:relative;box-shadow:var(--shadow);}
+.jc.prio{border:1.5px solid var(--priority-cta);}
+.jc-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.jc-date{font-size:12px;font-weight:700;color:var(--accent);}
+.jc-region{font-size:15px;font-weight:800;color:var(--text);margin-top:4px;letter-spacing:-0.3px;}
+.badge{font-size:10.5px;font-weight:800;padding:5px 9px;border-radius:8px;flex:0 0 auto;}
+.badge.prio{background:var(--priority-cta);color:#fff;}
+.badge.normal{background:var(--bg-blue);color:var(--navy);}
+.badge.done{background:var(--red);color:#fff;}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin:11px 0;}
+.tags span{font-size:11px;font-weight:700;color:var(--sub);background:#F1F4F8;padding:5px 9px;border-radius:7px;}
+.jc-meta{display:flex;justify-content:space-between;align-items:center;border-top:1px dashed var(--border);padding-top:11px;}
+.jc-equip{font-size:11.5px;color:var(--sub);font-weight:600;}
+.jc-amt{font-size:16px;font-weight:900;color:var(--navy);letter-spacing:-0.5px;}
+.countdown{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800;color:var(--red);margin-top:11px;background:var(--red-soft);padding:7px 10px;border-radius:9px;}
+.countdown .t{font-variant-numeric:tabular-nums;letter-spacing:0.5px;}
+.jc.done .blurwrap{filter:blur(3.5px);opacity:.5;}
+.done-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.fab{position:absolute;right:18px;bottom:84px;width:56px;height:56px;border-radius:18px;background:var(--cta-bg);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px rgba(0,47,108,.32);font-size:28px;font-weight:300;}
+.tabbar{flex:0 0 auto;background:#fff;border-top:1px solid var(--border);display:flex;padding:10px 4px 14px;}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.tab svg{width:21px;height:21px;stroke:var(--dim);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+.tab span{font-size:10px;font-weight:700;color:var(--dim);}
+.tab.on svg{stroke:var(--navy);} .tab.on span{color:var(--navy);}
+
+/* ============ DETAIL ============ */
+.detail{flex:1;display:flex;flex-direction:column;background:#fff;min-height:0;}
+.dbar{flex:0 0 auto;padding:6px 16px 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);}
+.dbar .bk{width:34px;height:34px;border-radius:10px;background:#F6F8FB;display:flex;align-items:center;justify-content:center;}
+.dbar svg{width:19px;height:19px;stroke:var(--navy);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.dbar .t{font-size:15.5px;font-weight:800;color:var(--navy);}
+.dbody{flex:1;min-height:0;overflow-y:auto;}
+.dbody::-webkit-scrollbar{display:none;}
+.map{height:140px;background:linear-gradient(135deg,#d6e3f3,#eef3fa);position:relative;display:flex;align-items:center;justify-content:center;}
+.map .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,47,108,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,47,108,.05) 1px,transparent 1px);background-size:26px 26px;}
+.map .pin{width:32px;height:32px;border-radius:50% 50% 50% 0;background:var(--red);transform:rotate(-45deg);box-shadow:0 6px 14px rgba(225,29,42,.45);position:relative;z-index:2;}
+.map .pin::after{content:"";position:absolute;top:10px;left:10px;width:12px;height:12px;border-radius:50%;background:#fff;}
+.prio-banner{display:flex;align-items:center;gap:10px;background:var(--red-soft);border:1px solid #F6CDD1;margin:14px 16px 0;padding:12px 13px;border-radius:13px;}
+.prio-banner .ico{width:30px;height:30px;border-radius:9px;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;flex:0 0 auto;}
+.prio-banner .txt{font-size:11.5px;font-weight:700;color:#9b1c25;line-height:1.45;}
+.prio-banner .txt b{font-variant-numeric:tabular-nums;font-size:12.5px;}
+.amt-box{margin:14px 16px 0;background:linear-gradient(135deg,var(--bg-blue),#f4f8ff);border:1px solid #DBE7FB;border-radius:15px;padding:16px 17px;}
+.amt-box .lab{font-size:11px;font-weight:700;color:var(--sub);}
+.amt-box .big{font-size:25px;font-weight:900;color:var(--navy);letter-spacing:-0.8px;margin-top:3px;}
+.amt-box .ref{font-size:11.5px;color:var(--sub);margin-top:10px;display:flex;justify-content:space-between;border-top:1px solid #DBE7FB;padding-top:10px;}
+.amt-box .ref b{color:var(--accent);font-weight:800;}
+.sect{padding:18px 17px 6px;}
+.sect h3{font-size:12px;font-weight:800;color:var(--sub);margin-bottom:13px;text-transform:none;}
+.row{display:flex;justify-content:space-between;align-items:flex-start;font-size:13px;margin-bottom:13px;gap:14px;}
+.row .k{color:var(--sub);font-weight:600;flex:0 0 auto;}
+.row .v{color:var(--text);font-weight:700;text-align:right;line-height:1.45;}
+.dcta{flex:0 0 auto;padding:13px 16px 18px;border-top:1px solid var(--border);display:flex;gap:10px;background:#fff;}
+.btn-sub{flex:1;height:52px;border-radius:14px;border:1.6px solid var(--border);background:#fff;color:var(--navy);font-size:14px;font-weight:800;}
+.btn-priority{flex:1.35;height:52px;border-radius:14px;border:none;background:var(--priority-cta);color:#fff;font-size:14px;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 8px 18px rgba(0,47,108,.18);}
+.btn-priority small{font-size:9.5px;font-weight:700;opacity:.85;}
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <h1>전중배 — 브랜딩 시안 v2 · 빨강 사용 3안 비교</h1>
+  <p>로고/구조/내용은 동일하고 <b>빨강을 어디에 쓰느냐</b>만 다릅니다. 색 톤만 비교해 주세요. (이전 잘림·여백 문제 수정)</p>
+  <div class="legend">
+    <span class="tag">안 A — <b>액션 레드</b></span>
+    <span class="tag">안 B — <b>네이비 절제</b></span>
+    <span class="tag">안 C — <b>듀얼 강조</b></span>
+  </div>
+  <div class="note">⚠️ 로고는 <b>임시 워드마크(SVG)</b>입니다. 실제 <code>전중배_logo_out-5.pdf</code>를 PNG/SVG로 내보내 주시면 같은 자리에 교체합니다. 빨강 기본값 <code>#E11D2A</code>(채도 조정 가능).</div>
+</div>
+
+<div class="compare" id="compare"></div>
+
+<script>
+function statusbar(onNavy){
+  return '<div class="sb '+(onNavy?'on-navy':'on-light')+'"><span>9:41</span>'
+    +'<span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 16h3v4H2zM7 12h3v8H7zM12 8h3v12h-3zM17 4h3v16h-3z"/></svg>'
+    +'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4C7 4 3 7 1 11l11 9 11-9c-2-4-6-7-11-7z" opacity=".9"/></svg>'
+    +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="17" height="10" rx="2"/><rect x="4" y="9" width="11" height="6" rx="1" fill="currentColor"/><path d="M21 10v4"/></svg></span></div>';
+}
+function emblem(onNavy){
+  return '<div class="logo'+(onNavy?' on-navy':'')+'">'
+    + '<div class="emblem"><svg viewBox="0 0 24 24" fill="#fff"><path d="M2.5 18.5h19v2.2h-19z"/><path d="M4.8 18l1.1-3.6h6.4l.9 3.6z"/><rect x="5.4" y="9.2" width="5" height="3.2" rx=".8"/><path d="M10.2 10.6l6.6-3.4.95 1.7-6.1 3.2z"/><circle cx="17.4" cy="6.8" r="1.7"/></svg></div>'
+    + '<div class="wm"><div class="kr">전중<i>배</i><span class="dot"></span></div><div class="en">전국중장비배차</div></div></div>';
+}
+
+function login(){return `
+<div class="login">
+  <div class="login-top">
+    <div class="deco d1"></div><div class="deco d2"></div><div class="deco d3"></div>
+    ${emblem(true)}
+    <div class="login-hero"><h1>전국 중장비<br><span>배차의 시작.</span></h1>
+      <p>믿을 수 있는 기사와 일감을 한 번에.</p></div>
+  </div>
+  <div class="login-form">
+    <div class="fld"><label>휴대폰 번호</label><div class="input"><input value="010-5580-8204"></div></div>
+    <div class="fld"><label>비밀번호</label><div class="input"><input type="password" value="********"></div></div>
+    <div class="login-row"><label><input type="checkbox" checked> 자동 로그인</label><span class="find">비밀번호 찾기</span></div>
+    <button class="btn btn-primary">로그인</button>
+    <div class="signup">전중배가 처음이세요? <a>회원가입</a></div>
+    <div class="divider">SAFETY · TRUST · SPEED</div>
+    <div class="trust">
+      <div class="it"><div class="ic2"><svg viewBox="0 0 24 24"><path d="M12 2L4 6v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V6z"/><path d="M9 12l2 2 4-4"/></svg></div><span>자격 검증</span></div>
+      <div class="it"><div class="ic2"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><span>빠른 배차</span></div>
+      <div class="it"><div class="ic2"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div><span>안전 거래</span></div>
+    </div>
+  </div>
+</div>`;}
+
+function list(){return `
+<div class="list">
+  <div class="appbar">${emblem(false)}
+    <div class="bell"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg><span class="dot"></span></div>
+  </div>
+  <div class="filters">
+    <span class="chip on">서울 전체 ▾</span><span class="chip on">궤도형</span><span class="chip on">대형</span><span class="chip">+ 필터</span>
+  </div>
+  <div class="cards">
+    <div class="jc prio">
+      <div class="jc-top"><div><div class="jc-date">6/5(목) 08:00</div><div class="jc-region">서울 강남구 역삼동</div></div><span class="badge prio">우선배차</span></div>
+      <div class="tags"><span>뿌레카</span><span>코아(천공)</span></div>
+      <div class="jc-meta"><span class="jc-equip">궤도형 · 대형</span><span class="jc-amt">480,000원</span></div>
+      <div class="countdown">⏱ 우선배차 마감까지 <span class="t">00:24</span></div>
+    </div>
+    <div class="jc">
+      <div class="jc-top"><div><div class="jc-date">6/6(금) 13:00</div><div class="jc-region">경기 성남시 분당구</div></div><span class="badge normal">모집중</span></div>
+      <div class="tags"><span>그라플</span><span>돌집게</span></div>
+      <div class="jc-meta"><span class="jc-equip">바퀴형 · 중형</span><span class="jc-amt">350,000원</span></div>
+    </div>
+    <div class="jc done">
+      <div class="blurwrap">
+        <div class="jc-top"><div><div class="jc-date">6/4(수) 09:00</div><div class="jc-region">서울 송파구 문정동</div></div></div>
+        <div class="tags"><span>다짐기</span></div>
+        <div class="jc-meta"><span class="jc-equip">궤도형 · 소형</span><span class="jc-amt">280,000원</span></div>
+      </div>
+      <div class="done-overlay"><span class="badge done">배차완료</span></div>
+    </div>
+  </div>
+  <div class="fab">+</div>
+  <div class="tabbar">
+    <div class="tab on"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1z"/></svg><span>일감</span></div>
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>배차</span></div>
+    <div class="tab"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg><span>캘린더</span></div>
+    <div class="tab"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20M16 14h3"/></svg><span>지갑</span></div>
+    <div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span>MY</span></div>
+  </div>
+</div>`;}
+
+function detail(){return `
+<div class="detail">
+  <div class="dbar"><div class="bk"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div><span class="t">일감 상세</span></div>
+  <div class="dbody">
+    <div class="map"><div class="grid"></div><div class="pin"></div></div>
+    <div class="prio-banner"><div class="ico">⏱</div><div class="txt">우선배차 진행 중 · 배차권 보유자 우선 지원<br>남은 시간 <b>00:24</b></div></div>
+    <div class="amt-box">
+      <div class="lab">일감 금액</div>
+      <div class="big">480,000원</div>
+      <div class="ref"><span>소개비(10%) <b>48,000p</b> 차감 예정</span><span>결제 · 직수</span></div>
+    </div>
+    <div class="sect">
+      <h3>작업 정보</h3>
+      <div class="row"><span class="k">작업 일시</span><span class="v">6/5(목) 08:00 시작</span></div>
+      <div class="row"><span class="k">위치</span><span class="v">서울 강남구 역삼동 123-4</span></div>
+      <div class="row"><span class="k">작업 종류</span><span class="v">뿌레카 · 코아(천공)</span></div>
+      <div class="row"><span class="k">장비 조건</span><span class="v">궤도형 · 대형</span></div>
+      <div class="row"><span class="k">메모</span><span class="v">지하 진입로 협소,<br>오전 도착 요망</span></div>
+    </div>
+  </div>
+  <div class="dcta">
+    <button class="btn-sub">일반 지원</button>
+    <button class="btn-priority">우선 지원<small>배차권 1장 사용</small></button>
+  </div>
+</div>`;}
+
+const variants=[
+  {id:'a',name:'안 A — <b>액션 레드</b>',desc:'주요 버튼(로그인·우선지원)이 빨강. 행동 유도가 가장 강한 톤.'},
+  {id:'b',name:'안 B — <b>네이비 절제</b>',desc:'버튼은 네이비, 빨강은 배차완료·우선배차 등 상태/포인트에만. 가장 차분.'},
+  {id:'c',name:'안 C — <b>듀얼 강조</b>',desc:"일반은 네이비, '우선 지원'·카운트다운 등 긴급 요소만 빨강. 균형형."},
+];
+const screens=[['로그인',login,true],['일감 목록',list,false],['일감 상세',detail,false]];
+const root=document.getElementById('compare');
+variants.forEach(v=>{
+  const col=document.createElement('div'); col.className='col variant-'+v.id;
+  col.innerHTML='<div class="col-head"><div class="name">'+v.name+'</div><div class="desc">'+v.desc+'</div></div>';
+  const stack=document.createElement('div'); stack.className='stack';
+  screens.forEach(([label,fn,navy])=>{
+    const ph=document.createElement('div'); ph.className='phone';
+    ph.innerHTML='<div class="screen">'+statusbar(navy)+fn()+'</div>';
+    stack.appendChild(ph);
+  });
+  col.appendChild(stack); root.appendChild(col);
+});
+</script>
+</body>
+</html>

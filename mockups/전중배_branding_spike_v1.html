@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전중배 — 브랜딩 시안 (로고 + 빨강) 3안 비교</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --navy:#002F6C; --blue:#3B82F6; --bg-blue:#EFF6FF;
+  --red:#E11D2A; --red-bg:#FEECEC;
+  --bg:#F1F4F8; --card:#fff; --border:#E2E8F0;
+  --text:#1A1A1E; --sub:#6E6E78; --dim:#9E9EA8;
+  --ok:#16A34A;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Pretendard Variable',Pretendard,system-ui,sans-serif;}
+body{background:var(--bg);color:var(--text);padding:28px 18px 60px;-webkit-font-smoothing:antialiased;}
+
+/* ── page header ── */
+.page-head{max-width:1100px;margin:0 auto 26px;}
+.page-head h1{font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-0.5px;}
+.page-head p{font-size:13px;color:var(--sub);margin-top:6px;line-height:1.6;}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+.legend .tag{font-size:12px;font-weight:700;padding:7px 12px;border-radius:9px;border:1px solid var(--border);background:#fff;}
+.legend .tag b{color:var(--red);}
+.note{margin-top:14px;font-size:12px;color:var(--sub);background:#FFF7E6;border:1px solid #FCE7B5;padding:10px 12px;border-radius:9px;line-height:1.6;}
+
+/* ── grid of variants ── */
+.compare{display:flex;gap:26px;justify-content:center;align-items:flex-start;flex-wrap:wrap;max-width:1100px;margin:0 auto;}
+.col{flex:0 0 auto;}
+.col-head{text-align:center;margin-bottom:14px;}
+.col-head .name{font-size:15px;font-weight:800;color:var(--navy);}
+.col-head .name b{color:var(--red);}
+.col-head .desc{font-size:11.5px;color:var(--sub);margin-top:3px;max-width:300px;line-height:1.5;}
+.stack{display:flex;flex-direction:column;gap:22px;}
+
+/* ── phone frame ── */
+.phone{width:300px;height:600px;background:#000;border-radius:34px;padding:9px;box-shadow:0 12px 34px rgba(0,47,108,.22);}
+.screen{width:100%;height:100%;background:#fff;border-radius:26px;overflow:hidden;position:relative;display:flex;flex-direction:column;}
+.scr-cap{position:absolute;top:8px;left:0;right:0;text-align:center;font-size:10px;font-weight:800;color:var(--dim);letter-spacing:1px;z-index:50;pointer-events:none;}
+
+/* ===== variant theming (the differentiator) ===== */
+.variant-a{ --cta-bg:var(--red); --cta-fg:#fff; --accent:var(--red); --logo-accent:var(--red); --priority-cta:var(--red); --chip-on:var(--red); --chip-on-bg:var(--red-bg);}
+.variant-b{ --cta-bg:var(--navy); --cta-fg:#fff; --accent:var(--navy); --logo-accent:var(--red); --priority-cta:var(--navy); --chip-on:var(--navy); --chip-on-bg:var(--bg-blue);}
+.variant-c{ --cta-bg:var(--navy); --cta-fg:#fff; --accent:var(--blue); --logo-accent:var(--red); --priority-cta:var(--red); --chip-on:var(--navy); --chip-on-bg:var(--bg-blue);}
+
+/* ── logo lockup ── */
+.logo{display:flex;align-items:center;gap:9px;}
+.logo .emblem{width:38px;height:38px;border-radius:10px;background:var(--navy);display:flex;align-items:center;justify-content:center;flex:0 0 auto;position:relative;overflow:hidden;}
+.logo .emblem svg{width:24px;height:24px;}
+.logo .emblem::after{content:"";position:absolute;right:0;bottom:0;width:12px;height:12px;background:var(--logo-accent);border-top-left-radius:8px;}
+.logo .wm{line-height:1;}
+.logo .wm .kr{font-size:18px;font-weight:900;letter-spacing:-1px;color:var(--navy);}
+.logo .wm .kr i{color:var(--logo-accent);font-style:normal;}
+.logo .wm .en{font-size:8px;font-weight:700;letter-spacing:1.5px;color:var(--dim);margin-top:3px;}
+.logo.on-navy .wm .kr{color:#fff;}
+.logo.on-navy .wm .en{color:rgba(255,255,255,.7);}
+.logo.on-navy .emblem{background:rgba(255,255,255,.14);}
+
+/* ===================== LOGIN ===================== */
+.login{height:100%;display:flex;flex-direction:column;background:#fff;}
+.login-top{background:var(--navy);padding:46px 24px 30px;position:relative;overflow:hidden;}
+.login-deco{position:absolute;border-radius:50%;background:rgba(255,255,255,.06);}
+.login-deco.d1{width:150px;height:150px;top:-50px;right:-40px;}
+.login-deco.d2{width:90px;height:90px;bottom:-30px;right:40px;background:rgba(225,29,42,.18);}
+.login-hero{margin-top:30px;position:relative;z-index:2;}
+.login-hero h1{font-size:25px;font-weight:900;color:#fff;line-height:1.28;letter-spacing:-0.8px;}
+.login-hero h1 span{color:var(--logo-accent);}
+.login-hero p{font-size:12.5px;color:rgba(255,255,255,.78);margin-top:10px;}
+.login-form{padding:24px 22px;flex:1;display:flex;flex-direction:column;}
+.fld{margin-bottom:13px;}
+.fld label{display:block;font-size:11.5px;font-weight:700;color:var(--sub);margin-bottom:6px;}
+.fld input{width:100%;height:44px;border:1.5px solid var(--border);background:#F8FAFC;border-radius:11px;padding:0 13px;font-size:13px;color:var(--text);}
+.fld input:focus{outline:none;border-color:var(--navy);background:#fff;}
+.login-row{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--sub);margin:2px 0 16px;}
+.login-row label{display:flex;align-items:center;gap:5px;}
+.login-row .find{color:var(--accent);font-weight:600;}
+.btn{width:100%;height:48px;border:none;border-radius:12px;font-size:14.5px;font-weight:800;cursor:pointer;}
+.btn-primary{background:var(--cta-bg);color:var(--cta-fg);box-shadow:0 6px 16px rgba(0,47,108,.18);}
+.signup{text-align:center;font-size:12px;color:var(--sub);margin-top:16px;}
+.signup a{color:var(--accent);font-weight:800;}
+.divider{margin:20px 0 14px;text-align:center;font-size:9.5px;font-weight:800;letter-spacing:2.5px;color:var(--dim);position:relative;}
+.divider::before,.divider::after{content:"";position:absolute;top:50%;width:46px;height:1px;background:var(--border);}
+.divider::before{left:14px;} .divider::after{right:14px;}
+.trust{display:flex;justify-content:space-around;}
+.trust .it{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.trust .ic{width:38px;height:38px;border-radius:11px;background:var(--bg-blue);display:flex;align-items:center;justify-content:center;}
+.trust .ic svg{width:19px;height:19px;stroke:var(--navy);fill:none;stroke-width:1.8;}
+.trust span{font-size:10.5px;font-weight:700;color:var(--sub);}
+
+/* ===================== LIST ===================== */
+.list{height:100%;display:flex;flex-direction:column;background:var(--bg);}
+.appbar{background:#fff;padding:30px 18px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+.bell{position:relative;width:30px;height:30px;display:flex;align-items:center;justify-content:center;}
+.bell svg{width:21px;height:21px;stroke:var(--navy);fill:none;stroke-width:1.8;}
+.bell .dot{position:absolute;top:3px;right:4px;width:8px;height:8px;border-radius:50%;background:var(--red);border:1.5px solid #fff;}
+.filters{display:flex;gap:7px;padding:12px 16px;background:#fff;border-bottom:1px solid var(--border);overflow-x:auto;}
+.chip{flex:0 0 auto;font-size:11.5px;font-weight:700;padding:7px 12px;border-radius:18px;border:1px solid var(--border);background:#fff;color:var(--sub);display:flex;align-items:center;gap:4px;}
+.chip.on{border-color:var(--chip-on);background:var(--chip-on-bg);color:var(--chip-on);}
+.cards{flex:1;overflow-y:auto;padding:13px 14px;display:flex;flex-direction:column;gap:11px;}
+.jc{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:14px;position:relative;}
+.jc.prio{border-color:var(--priority-cta);box-shadow:0 4px 14px rgba(225,29,42,.08);}
+.jc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:9px;}
+.jc-date{font-size:12px;font-weight:800;color:var(--navy);}
+.jc-region{font-size:13.5px;font-weight:800;color:var(--text);margin-top:3px;}
+.badge{font-size:10px;font-weight:800;padding:4px 8px;border-radius:7px;}
+.badge.prio{background:var(--priority-cta);color:#fff;}
+.badge.normal{background:var(--bg-blue);color:var(--navy);}
+.badge.done{background:var(--red);color:#fff;}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0;}
+.tags span{font-size:10.5px;font-weight:700;color:var(--sub);background:#F1F5F9;padding:4px 8px;border-radius:6px;}
+.jc-meta{display:flex;justify-content:space-between;align-items:center;border-top:1px dashed var(--border);padding-top:9px;margin-top:4px;}
+.jc-equip{font-size:11px;color:var(--sub);font-weight:600;}
+.jc-amt{font-size:15px;font-weight:900;color:var(--navy);}
+.countdown{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:800;color:var(--red);margin-top:8px;}
+.countdown .t{font-variant-numeric:tabular-nums;}
+.jc.done .blurwrap{filter:blur(3px);opacity:.55;}
+.jc.done{display:flex;flex-direction:column;}
+.done-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.fab{position:absolute;right:16px;bottom:74px;width:52px;height:52px;border-radius:16px;background:var(--cta-bg);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(0,47,108,.3);font-size:26px;font-weight:300;}
+.tabbar{background:#fff;border-top:1px solid var(--border);display:flex;padding:8px 4px 12px;}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.tab svg{width:20px;height:20px;stroke:var(--dim);fill:none;stroke-width:1.8;}
+.tab span{font-size:9.5px;font-weight:700;color:var(--dim);}
+.tab.on svg{stroke:var(--navy);} .tab.on span{color:var(--navy);}
+
+/* ===================== DETAIL ===================== */
+.detail{height:100%;display:flex;flex-direction:column;background:#fff;}
+.dbar{padding:30px 16px 12px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);}
+.dbar svg{width:20px;height:20px;stroke:var(--navy);fill:none;stroke-width:2;}
+.dbar .t{font-size:15px;font-weight:800;color:var(--navy);}
+.dbody{flex:1;overflow-y:auto;}
+.map{height:120px;background:linear-gradient(135deg,#dbe7f5,#eef3fa);position:relative;display:flex;align-items:center;justify-content:center;}
+.map .pin{width:30px;height:30px;border-radius:50% 50% 50% 0;background:var(--red);transform:rotate(-45deg);box-shadow:0 4px 10px rgba(225,29,42,.4);}
+.map .pin::after{content:"";position:absolute;top:9px;left:9px;width:12px;height:12px;border-radius:50%;background:#fff;}
+.prio-banner{display:flex;align-items:center;gap:8px;background:var(--red-bg);border:1px solid #F6C9CC;margin:13px 14px 0;padding:10px 12px;border-radius:11px;}
+.prio-banner .ico{width:26px;height:26px;border-radius:8px;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 auto;}
+.prio-banner .txt{font-size:11px;font-weight:700;color:#9b1c25;line-height:1.4;}
+.prio-banner .txt b{font-variant-numeric:tabular-nums;}
+.sect{padding:15px 16px 4px;}
+.sect h3{font-size:12px;font-weight:800;color:var(--sub);margin-bottom:10px;}
+.row{display:flex;justify-content:space-between;align-items:flex-start;font-size:12.5px;margin-bottom:11px;gap:12px;}
+.row .k{color:var(--sub);font-weight:600;flex:0 0 auto;}
+.row .v{color:var(--text);font-weight:700;text-align:right;}
+.amt-box{margin:6px 16px 0;background:var(--bg-blue);border-radius:13px;padding:14px 15px;}
+.amt-box .big{font-size:23px;font-weight:900;color:var(--navy);}
+.amt-box .ref{font-size:11.5px;color:var(--sub);margin-top:6px;display:flex;justify-content:space-between;}
+.amt-box .ref b{color:var(--accent);font-weight:800;}
+.dcta{padding:12px 14px 16px;border-top:1px solid var(--border);display:flex;gap:9px;background:#fff;}
+.btn-sub{flex:1;height:50px;border-radius:13px;border:1.6px solid var(--border);background:#fff;color:var(--navy);font-size:13.5px;font-weight:800;}
+.btn-priority{flex:1.3;height:50px;border-radius:13px;border:none;background:var(--priority-cta);color:#fff;font-size:13.5px;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;box-shadow:0 6px 16px rgba(225,29,42,.22);}
+.btn-priority small{font-size:9px;font-weight:700;opacity:.85;}
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <h1>전중배 — 브랜딩 시안 (로고 + 빨강 적용) · 3안 비교</h1>
+  <p>같은 3개 화면(로그인 · 일감목록 · 일감상세)에 <b>빨강 사용 전략만 다르게</b> 적용했습니다. 구조/내용은 동일하니 <b>색 톤만</b> 비교해 주세요.</p>
+  <div class="legend">
+    <span class="tag">안 A — <b>액션 레드</b> (버튼=빨강)</span>
+    <span class="tag">안 B — <b>네이비 절제</b> (빨강=상태/포인트만)</span>
+    <span class="tag">안 C — <b>듀얼</b> (우선/긴급 액션만 빨강)</span>
+  </div>
+  <div class="note">⚠️ 로고는 <b>임시 워드마크(SVG)</b>입니다. 실제 <code>전중배_logo_out-5.pdf</code>는 이 환경에서 이미지 변환이 불가해, 추후 PNG/SVG로 내보내 같은 자리에 교체하면 됩니다. 빨강 기본값은 <code>#E11D2A</code>(태극 레드 톤)이며 채도는 조정 가능합니다.</div>
+</div>
+
+<div class="compare" id="compare"></div>
+
+<script>
+/* 굴착기 엠블럼 아이콘 */
+function emblem(onNavy){
+  return '<div class="logo'+(onNavy?' on-navy':'')+'">'
+    + '<div class="emblem"><svg viewBox="0 0 24 24" fill="#fff"><path d="M3 19h18v2H3z"/><path d="M5 18l1.2-4h6.5l1 4z" opacity=".9"/><rect x="6" y="9" width="5" height="3" rx="1"/><path d="M11 10.5l6-3.2 1 1.8-5.6 3z"/><circle cx="17.5" cy="7" r="1.6"/></svg></div>'
+    + '<div class="wm"><div class="kr">전중<i>배</i></div><div class="en">전국중장비배차</div></div></div>';
+}
+
+/* ── 화면 1: 로그인 ── */
+function login(){return `
+<div class="login">
+  <div class="login-top">
+    <div class="login-deco d1"></div><div class="login-deco d2"></div>
+    ${emblem(true)}
+    <div class="login-hero"><h1>전국 중장비<br><span>배차의 시작.</span></h1>
+    <p>믿을 수 있는 기사와 일감을 한 번에.</p></div>
+  </div>
+  <div class="login-form">
+    <div class="fld"><label>휴대폰 번호</label><input value="010-5580-8204"></div>
+    <div class="fld"><label>비밀번호</label><input type="password" value="********"></div>
+    <div class="login-row"><label><input type="checkbox" checked> 자동 로그인</label><span class="find">비밀번호 찾기</span></div>
+    <button class="btn btn-primary">로그인</button>
+    <div class="signup">전중배가 처음이세요? <a>회원가입</a></div>
+    <div class="divider">SAFETY · TRUST · SPEED</div>
+    <div class="trust">
+      <div class="it"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2L4 6v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V6z"/><path d="M9 12l2 2 4-4"/></svg></div><span>자격 검증</span></div>
+      <div class="it"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><span>빠른 배차</span></div>
+      <div class="it"><div class="ic"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div><span>안전 거래</span></div>
+    </div>
+  </div>
+</div>`;}
+
+/* ── 화면 2: 일감 목록 ── */
+function list(){return `
+<div class="list">
+  <div class="appbar">${emblem(false)}
+    <div class="bell"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg><span class="dot"></span></div>
+  </div>
+  <div class="filters">
+    <span class="chip on">서울 전체 ▾</span>
+    <span class="chip on">궤도형</span>
+    <span class="chip on">대형</span>
+    <span class="chip">+ 필터</span>
+  </div>
+  <div class="cards">
+    <div class="jc prio">
+      <div class="jc-top"><div><div class="jc-date">6/5(목) 08:00</div><div class="jc-region">서울 강남구 역삼동</div></div><span class="badge prio">우선배차</span></div>
+      <div class="tags"><span>뿌레카</span><span>코아(천공)</span></div>
+      <div class="jc-meta"><span class="jc-equip">궤도형 · 대형</span><span class="jc-amt">480,000원</span></div>
+      <div class="countdown">⏱ 우선배차 마감 <span class="t">00:24</span></div>
+    </div>
+    <div class="jc">
+      <div class="jc-top"><div><div class="jc-date">6/6(금) 13:00</div><div class="jc-region">경기 성남시 분당구</div></div><span class="badge normal">모집중</span></div>
+      <div class="tags"><span>그라플</span><span>돌집게</span></div>
+      <div class="jc-meta"><span class="jc-equip">바퀴형 · 중형</span><span class="jc-amt">350,000원</span></div>
+    </div>
+    <div class="jc done">
+      <div class="blurwrap">
+        <div class="jc-top"><div><div class="jc-date">6/4(수) 09:00</div><div class="jc-region">서울 송파구 문정동</div></div></div>
+        <div class="tags"><span>다짐기</span></div>
+        <div class="jc-meta"><span class="jc-equip">궤도형 · 소형</span><span class="jc-amt">280,000원</span></div>
+      </div>
+      <div class="done-overlay"><span class="badge done">배차완료</span></div>
+    </div>
+  </div>
+  <div class="fab">+</div>
+  <div class="tabbar">
+    <div class="tab on"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1z"/></svg><span>일감</span></div>
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>배차</span></div>
+    <div class="tab"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg><span>캘린더</span></div>
+    <div class="tab"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20M16 14h3"/></svg><span>지갑</span></div>
+    <div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span>MY</span></div>
+  </div>
+</div>`;}
+
+/* ── 화면 3: 일감 상세 ── */
+function detail(){return `
+<div class="detail">
+  <div class="dbar"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="t">일감 상세</span></div>
+  <div class="dbody">
+    <div class="map"><div class="pin"></div></div>
+    <div class="prio-banner"><div class="ico">⏱</div><div class="txt">우선배차 진행 중 · 배차권 보유자 우선 지원 가능<br>남은 시간 <b>00:24</b></div></div>
+    <div class="amt-box">
+      <div class="big">480,000원</div>
+      <div class="ref"><span>소개비(10%) <b>48,000p</b> 차감 예정</span><span>결제 · 직수</span></div>
+    </div>
+    <div class="sect">
+      <h3>작업 정보</h3>
+      <div class="row"><span class="k">작업 일시</span><span class="v">6/5(목) 08:00 시작</span></div>
+      <div class="row"><span class="k">위치</span><span class="v">서울 강남구 역삼동 123-4</span></div>
+      <div class="row"><span class="k">작업 종류</span><span class="v">뿌레카 · 코아(천공)</span></div>
+      <div class="row"><span class="k">장비 조건</span><span class="v">궤도형 · 대형</span></div>
+      <div class="row"><span class="k">메모</span><span class="v">지하 진입로 협소,<br>오전 도착 요망</span></div>
+    </div>
+  </div>
+  <div class="dcta">
+    <button class="btn-sub">일반 지원</button>
+    <button class="btn-priority">우선 지원<small>배차권 1장 사용</small></button>
+  </div>
+</div>`;}
+
+const variants = [
+  {id:'a', name:'안 A — <b>액션 레드</b>', desc:'주요 버튼(로그인·우선지원)을 빨강으로. 행동 유도가 가장 강하고 에너지 있는 톤.'},
+  {id:'b', name:'안 B — <b>네이비 절제</b>', desc:'버튼은 네이비, 빨강은 배차완료·우선배차 같은 상태/포인트에만. 가장 차분하고 신뢰감 있는 톤.'},
+  {id:'c', name:'안 C — <b>듀얼 하이브리드</b>', desc:"일반은 네이비, '우선 지원'·카운트다운·알림 등 프리미엄/긴급 요소만 빨강으로 강조. 균형형."},
+];
+const screens=[['로그인',login],['일감 목록',list],['일감 상세',detail]];
+
+const root=document.getElementById('compare');
+variants.forEach(v=>{
+  const col=document.createElement('div');
+  col.className='col variant-'+v.id;
+  col.innerHTML='<div class="col-head"><div class="name">'+v.name+'</div><div class="desc">'+v.desc+'</div></div>';
+  const stack=document.createElement('div'); stack.className='stack';
+  screens.forEach(([label,fn])=>{
+    const ph=document.createElement('div'); ph.className='phone';
+    ph.innerHTML='<div class="screen"><div class="scr-cap">'+label+'</div>'+fn()+'</div>';
+    stack.appendChild(ph);
+  });
+  col.appendChild(stack); root.appendChild(col);
+});
+</script>
+</body>
+</html>

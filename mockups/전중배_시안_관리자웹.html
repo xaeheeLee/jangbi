@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전중배 — 관리자 웹 시안</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{
+  --navy:#002F6C; --navy-2:#013A85; --blue:#3B82F6; --blue-ink:#1D4ED8;
+  --red:#DC2626; --red-2:#EF4444; --orange:#F97316; --green:#15803D;
+  --bg:#F7F8FA; --card:#FFFFFF; --ink:#101622; --ink-2:#5A6473; --ink-3:#9AA3B2;
+  --line:#EAEDF2; --line-2:#F0F2F6;
+  --shadow:0 1px 2px rgba(16,24,40,.04),0 10px 28px rgba(16,24,40,.07);
+  --shadow-sm:0 1px 2px rgba(16,24,40,.05),0 4px 14px rgba(16,24,40,.05);
+  --shadow-lift:0 10px 22px rgba(0,47,108,.18);
+  --font:"Pretendard Variable","Pretendard",-apple-system,system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+html,body{font-family:var(--font);color:var(--ink)}
+body{background:radial-gradient(1200px 600px at 50% -200px,#f3f5f9 0%,#E9ECF2 60%);padding:48px 24px 90px;letter-spacing:-.01em}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+.ic{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* page head */
+.page-head{max-width:1160px;margin:0 auto 40px;text-align:center}
+.page-head .kicker{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--navy);background:#fff;border:1px solid var(--line);padding:7px 16px;border-radius:999px;box-shadow:var(--shadow-sm)}
+.page-head .kicker b{color:var(--red)}
+.page-head h1{font-size:30px;font-weight:800;margin-top:18px;letter-spacing:-.03em;color:#0b1220}
+.page-head p{margin-top:11px;color:var(--ink-2);font-size:15px;line-height:1.6}
+
+.deck{display:flex;flex-direction:column;gap:48px;align-items:center}
+.cell{width:1160px;max-width:100%}
+.cap{text-align:center;font-size:12.5px;font-weight:700;color:var(--ink-3);margin-top:13px;letter-spacing:.02em}
+
+/* browser window */
+.win{width:100%;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 30px 70px rgba(16,24,40,.22),0 2px 6px rgba(0,0,0,.06);border:1px solid #E4E8EF}
+.chrome{height:42px;display:flex;align-items:center;gap:8px;padding:0 16px;background:#F1F3F7;border-bottom:1px solid var(--line)}
+.chrome .dots{display:flex;gap:7px}
+.chrome .dots i{width:11px;height:11px;border-radius:50%;display:block}
+.chrome .url{margin:0 auto;font-size:12px;font-weight:600;color:var(--ink-3);background:#fff;border:1px solid var(--line);border-radius:8px;padding:5px 18px}
+
+.admin{display:grid;grid-template-columns:234px 1fr;height:726px}
+
+/* sidebar */
+.side{background:linear-gradient(180deg,#012a5e,#00193a);color:#fff;display:flex;flex-direction:column;padding:18px 14px}
+.blogo{display:flex;align-items:center;gap:10px;padding:6px 8px 20px}
+.blogo .bk{width:32px;height:32px;border-radius:9px;background:#fff;display:grid;place-items:center;color:var(--navy);font-weight:800;font-size:13px;letter-spacing:-.04em}
+.blogo b{font-size:14.5px;font-weight:800;display:block;line-height:1.15}
+.blogo small{font-size:10px;color:rgba(255,255,255,.55);font-weight:600}
+.nav{display:flex;flex-direction:column;gap:3px}
+.nav a{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:11px;color:rgba(255,255,255,.72);font-size:13.5px;font-weight:700;text-decoration:none}
+.nav a .ic{width:19px;height:19px}
+.nav a.on{background:rgba(255,255,255,.15);color:#fff}
+.nav a .nb{margin-left:auto;font-size:11px;font-weight:800;background:var(--red);color:#fff;border-radius:999px;padding:2px 8px;font-variant-numeric:tabular-nums}
+.adm{margin-top:auto;display:flex;align-items:center;gap:10px;padding:12px 8px 4px;border-top:1px solid rgba(255,255,255,.12)}
+.adm .av{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-weight:800;font-size:13px}
+.adm b{font-size:13px;font-weight:800;display:block}
+.adm small{font-size:11px;color:rgba(255,255,255,.55);font-weight:600}
+
+/* panel */
+.panel{display:flex;flex-direction:column;min-width:0;background:var(--bg)}
+.topbar{height:62px;display:flex;align-items:center;gap:12px;padding:0 24px;background:#fff;border-bottom:1px solid var(--line);flex:none}
+.topbar h2{font-size:18px;font-weight:800;letter-spacing:-.02em}
+.tb-search{margin-left:auto;display:flex;align-items:center;gap:8px;width:250px;height:38px;border:1px solid var(--line);border-radius:10px;padding:0 12px;color:var(--ink-3);font-size:13px;font-weight:600;background:#F7F8FA}
+.tb-search .ic{width:16px;height:16px}
+.iconbtn2{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:#fff;display:grid;place-items:center;color:var(--ink-2);position:relative}
+.iconbtn2 .ic{width:18px;height:18px}
+.iconbtn2 .dot{position:absolute;top:8px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid #fff}
+.content{padding:22px 24px;overflow:auto;flex:1}
+.chead{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.chead h3{font-size:16px;font-weight:800;letter-spacing:-.02em}
+.chead .sub{font-size:12.5px;color:var(--ink-3);font-weight:600}
+
+/* kpi */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);padding:16px}
+.kpi .kl{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--ink-2)}
+.kpi .kl .ic{width:16px;height:16px;color:var(--navy)}
+.kpi .kv{font-size:25px;font-weight:800;color:var(--ink);margin-top:10px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .kd{font-size:11.5px;font-weight:700;margin-top:6px;color:var(--ink-3)}
+.kpi .kd.up{color:var(--green)}.kpi .kd.warn{color:var(--red)}
+
+/* card + table */
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden}
+.card .ch{display:flex;align-items:center;padding:15px 18px;border-bottom:1px solid var(--line)}
+.card .ch h3{font-size:14.5px;font-weight:800}
+.card .ch .more{margin-left:auto;font-size:12.5px;font-weight:700;color:var(--blue-ink)}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:11.5px;font-weight:700;color:var(--ink-3);text-align:left;padding:11px 18px;background:#FAFBFC;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{font-size:13px;color:var(--ink);padding:13px 18px;border-bottom:1px solid var(--line-2);white-space:nowrap}
+.tbl tr:last-child td{border-bottom:none}
+.tbl td.num{font-variant-numeric:tabular-nums}
+.tbl tr.sel td{background:#EFF6FF}
+.tbl .nm{font-weight:700}
+.r{color:var(--red)}.g{color:var(--green)}.n{color:var(--navy)}
+
+.bdg{font-size:11px;font-weight:800;padding:4px 9px;border-radius:7px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.bdg.wait{color:#B45309;background:#FCF0D8}
+.bdg.ok{color:var(--green);background:#E7F6EC}
+.bdg.no{color:#64748B;background:#EAEDF2}
+.bdg.prio{color:var(--red);background:#FEECEC}
+.bdg.blue{color:var(--blue-ink);background:#EAF1FE}
+
+.btn2{height:38px;border-radius:10px;font-size:13px;font-weight:800;padding:0 15px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn2 .ic{width:16px;height:16px}
+.btn2.navy{background:var(--navy);color:#fff;box-shadow:var(--shadow-lift)}
+.btn2.gh{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.btn2.red{background:var(--red);color:#fff}
+.btn2.green{background:var(--green);color:#fff}
+.btn2.sm{height:32px;font-size:12.5px;padding:0 12px;border-radius:9px}
+
+.tgl{width:42px;height:25px;border-radius:999px;background:#D7DEE8;position:relative;flex:none;display:inline-block}
+.tgl.on{background:var(--navy)}
+.tgl::after{content:"";position:absolute;top:3px;left:3px;width:19px;height:19px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.tgl.on::after{left:20px}
+
+.note{display:flex;gap:9px;background:#EFF6FF;border:1px solid #DCE8FB;border-radius:12px;padding:12px 14px;font-size:12.5px;font-weight:600;color:var(--ink-2);line-height:1.5;margin-bottom:16px}
+.note .ic{width:17px;height:17px;color:var(--navy);flex:none;margin-top:1px}
+
+.seg{display:inline-flex;background:#EEF1F5;border-radius:10px;padding:3px;gap:3px}
+.seg button{height:30px;border-radius:8px;font-size:12px;font-weight:800;color:var(--ink-2);padding:0 12px}
+.seg button.on{background:#fff;color:var(--navy);box-shadow:var(--shadow-sm)}
+
+.filterbar{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.pill-in{display:inline-flex;align-items:center;gap:7px;height:38px;border:1px solid var(--line);border-radius:10px;padding:0 13px;background:#fff;font-size:13px;font-weight:700;color:var(--ink)}
+.pill-in .ic{width:16px;height:16px;color:var(--ink-3)}
+
+/* doc tiles (회원 승인) */
+.docgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.doctile{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.doctile .thumb{height:84px;background:repeating-linear-gradient(135deg,#EDF1F6,#EDF1F6 9px,#E6EBF2 9px,#E6EBF2 18px);position:relative;display:grid;place-items:center}
+.doctile .thumb .mask{position:absolute;inset:0;backdrop-filter:blur(1px)}
+.doctile .thumb .eye{position:relative;display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;color:var(--navy);background:rgba(255,255,255,.92);padding:5px 10px;border-radius:8px;box-shadow:var(--shadow-sm)}
+.doctile .thumb .eye .ic{width:13px;height:13px}
+.doctile .dn{display:flex;align-items:center;justify-content:space-between;padding:9px 11px}
+.doctile .dn b{font-size:12.5px;font-weight:700}
+.tag2{display:inline-flex;align-items:center;font-size:11px;font-weight:700;color:var(--blue-ink);background:#EAF1FE;padding:3px 8px;border-radius:7px}
+
+.acts{display:flex;gap:10px;margin-top:14px}
+/* 회원 관리 detail */
+.stepc{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.stepc button{width:34px;height:34px;display:grid;place-items:center;color:var(--navy);background:#fff}
+.stepc button .ic{width:16px;height:16px}
+.stepc .v{width:48px;height:34px;display:grid;place-items:center;font-size:15px;font-weight:800;border-left:1px solid var(--line);border-right:1px solid var(--line);font-variant-numeric:tabular-nums}
+.kv2{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line-2)}
+.kv2:last-child{border-bottom:none}
+.kv2 .k{font-size:13px;font-weight:700;color:var(--ink-2)}
+.kv2 .sub{font-size:11px;color:var(--ink-3);font-weight:600;margin-top:2px}
+.grade{font-size:11px;font-weight:800;padding:4px 9px;border-radius:7px;white-space:nowrap}
+.grade.act{color:var(--green);background:#E7F6EC}.grade.pend{color:#B45309;background:#FCF0D8}.grade.susp{color:var(--red);background:#FEECEC}
+/* 현장 사진 */
+.phr{display:flex;gap:10px;padding:14px 18px}
+.phr .ph{flex:1;border-radius:11px;overflow:hidden;border:1px solid var(--line);background:#fff}
+.phr .ph .pi{height:104px;background:repeating-linear-gradient(135deg,#EDF1F6,#EDF1F6 10px,#E6EBF2 10px,#E6EBF2 20px);position:relative;display:grid;place-items:center}
+.phr .ph .pi.empty{background:#FAFBFC;border-bottom:1px dashed var(--line)}
+.phr .ph .pi .lab{position:absolute;top:8px;left:8px;font-size:10.5px;font-weight:800;color:#fff;background:rgba(16,24,40,.6);padding:3px 8px;border-radius:6px}
+.phr .ph .pi .eye{font-size:11px;font-weight:800;color:var(--navy);background:rgba(255,255,255,.92);padding:5px 10px;border-radius:7px;display:inline-flex;align-items:center;gap:4px}
+.phr .ph .pi .eye .ic{width:12px;height:12px}
+.phr .ph .pi .none{font-size:11.5px;font-weight:700;color:var(--ink-3)}
+.phr .ph .pm{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;font-size:11px;font-weight:700;color:var(--ink-2)}
+/* 일감 메시지·별점 */
+.jno{font-size:12px;font-weight:800;color:var(--navy);letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.starbtn{height:42px;border-radius:11px;border:1.5px solid var(--line);background:#fff;font-size:14px;font-weight:800;color:var(--ink-2);padding:0 18px;display:inline-flex;align-items:center;gap:6px}
+.starbtn .ic{width:16px;height:16px}
+.starbtn.on{border-color:#E6B800;background:#FFF8E6;color:#B8860B}
+.ta{width:100%;min-height:78px;border:1.5px solid var(--line);border-radius:11px;padding:12px 13px;font-size:13px;font-weight:600;color:var(--ink);line-height:1.55;background:#fff}
+.tmpl{font-size:11.5px;font-weight:700;color:var(--blue-ink);background:#EAF1FE;padding:6px 11px;border-radius:999px;white-space:nowrap}
+/* 설정(app_settings) */
+.srow{display:flex;align-items:center;padding:13px 18px;border-bottom:1px solid var(--line-2)}
+.srow:last-child{border-bottom:none}
+.srow .sl{flex:1;min-width:0}
+.srow .sl b{font-size:13.5px;font-weight:700;color:var(--ink);display:block}
+.srow .sl small{font-size:11.5px;color:var(--ink-3);font-weight:600}
+.srow .sv{display:flex;align-items:center;gap:8px;flex:none}
+.srow .vin{height:36px;border:1.5px solid var(--line);border-radius:9px;padding:0 12px;font-size:13.5px;font-weight:800;color:var(--ink);background:#fff;width:92px;text-align:right;font-variant-numeric:tabular-nums}
+.srow .vin.muted{color:var(--ink-3);border-style:dashed}
+.srow .unit{font-size:12.5px;font-weight:700;color:var(--ink-3);width:30px}
+.setcol{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+</style>
+</head>
+<body>
+<!-- icons -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="i-usercheck" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.4"/><path d="M3 20c.6-3.3 3.1-5 6-5 1 0 2 .2 2.8.6"/><path d="M14.5 13.5l2 2 4-4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="8.5" cy="8" r="3.2"/><path d="M2.5 20c.6-3.3 3-5 6-5s5.4 1.7 6 5"/><path d="M16 5.2a3 3 0 0 1 0 5.6M21.5 20c-.4-2.4-1.8-3.9-3.9-4.6"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 4l2.5 5 5.5.8-4 3.9 1 5.5L12 16.6 7.5 19l1-5.5-4-3.9 5.5-.8L12 4Z"/></symbol>
+  <symbol id="i-coins" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="7" ry="3"/><path d="M5 6.5v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5M5 11.5v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"/></symbol>
+  <symbol id="i-cog" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.1"/><path d="M12 2.5v2.6M12 18.9v2.6M21.5 12h-2.6M5.1 12H2.5M18.7 5.3l-1.8 1.8M7.1 16.9l-1.8 1.8M18.7 18.7l-1.8-1.8M7.1 7.1 5.3 5.3"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-3.6-3.6"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 9a6 6 0 1 1 12 0c0 4 1.2 5.5 2 6.5H4c.8-1 2-2.5 2-6.5ZM9.5 19a2.5 2.5 0 0 0 5 0"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M7 3h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v4h4M9 13h6M9 16.5h4"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24"><path d="M3 7.5h11v8.5H3zM14 10.5h3.6l3.4 3.2v2.3H14z"/><circle cx="7" cy="17.5" r="1.9"/><circle cx="17.6" cy="17.5" r="1.9"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v10M8 11l4 4 4-4M5 19h14"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l4.5 4.5L19 6.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-bank" viewBox="0 0 24 24"><path d="M4 10h16M5 10 12 4.5 19 10M6.5 10.5v7M10 10.5v7M14 10.5v7M17.5 10.5v7M4 18.5h16"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="3"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8.5h3l1.3-2h7.4l1.3 2h3a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.1"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M14 5l5 5M4 20l1-4L15.5 4.5l3.5 3.5L8 19l-4 1Z"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M6.2 6.2 17.8 17.8"/></symbol>
+</svg>
+
+<header class="page-head">
+  <div class="kicker">전중배 <b>·</b> 관리자 웹 (PC)</div>
+  <h1>관리자 웹 — 운영 콘솔 시안</h1>
+  <p><b>상단 버튼</b>으로 화면을 하나씩 볼 수 있습니다. 모바일 앱과 같은 디자인 토큰(네이비·Pretendard)으로 구성한 PC 운영 콘솔 — 회원 승인·서류 마스킹, 프리미엄, 정산/세무 Export, 평점, 현장 사진, 일감 메시지, 설정.</p>
+</header>
+
+<style>
+.catnav{position:sticky;top:0;z-index:120;display:flex;gap:8px;overflow-x:auto;padding:13px 16px;margin:0 auto 18px;max-width:1180px;background:rgba(233,236,242,.92);backdrop-filter:blur(10px);scrollbar-width:none}
+.catnav::-webkit-scrollbar{display:none}
+.catnav button{flex:none;height:38px;padding:0 16px;border-radius:999px;font-size:13px;font-weight:800;color:var(--ink-2);background:#fff;border:1px solid var(--line);white-space:nowrap;box-shadow:var(--shadow-sm);transition:transform .08s}
+.catnav button:active{transform:scale(.96)}
+.catnav button.on{background:var(--navy);color:#fff;border-color:var(--navy);box-shadow:var(--shadow-lift)}
+@media (max-width:1220px){
+  body{padding:8px 0 60px;overflow-x:auto}
+  .page-head{padding:0 14px}
+  .page-head h1{font-size:21px}
+  .page-head p{font-size:12.5px}
+  .catnav{padding:12px;margin-bottom:10px}
+}
+</style>
+<nav id="catnav" class="catnav" aria-label="화면 선택"></nav>
+
+<main class="deck">
+
+  <!-- A. 대시보드 -->
+  <div class="cell">
+    <div class="win">
+      <div class="chrome"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">admin.jeonjungbae.kr / dashboard</span></div>
+      <div class="admin">
+        <aside class="side">
+          <div class="blogo"><span class="bk">전중</span><span><b>전중배</b><small>운영 콘솔</small></span></div>
+          <nav class="nav">
+            <a class="on"><svg class="ic"><use href="#i-grid"/></svg>대시보드</a>
+            <a><svg class="ic"><use href="#i-usercheck"/></svg>회원 승인<span class="nb">12</span></a>
+            <a><svg class="ic"><use href="#i-users"/></svg>회원 관리</a>
+            <a><svg class="ic"><use href="#i-star"/></svg>프리미엄 명단</a>
+            <a><svg class="ic"><use href="#i-truck"/></svg>일감·매칭</a>
+            <a><svg class="ic"><use href="#i-camera"/></svg>현장 사진</a>
+            <a><svg class="ic"><use href="#i-coins"/></svg>포인트·정산</a>
+            <a><svg class="ic"><use href="#i-cog"/></svg>설정</a>
+          </nav>
+          <div class="adm"><span class="av">운</span><span><b>운영팀</b><small>admin@jeonjungbae</small></span></div>
+        </aside>
+        <section class="panel">
+          <div class="topbar"><h2>대시보드</h2><div class="tb-search"><svg class="ic"><use href="#i-search"/></svg>회원·일감 검색</div><button class="iconbtn2"><span class="dot"></span><svg class="ic"><use href="#i-bell"/></svg></button></div>
+          <div class="content">
+            <div class="kpis">
+              <div class="kpi"><div class="kl"><svg class="ic"><use href="#i-usercheck"/></svg>승인 대기</div><div class="kv">12명</div><div class="kd warn">오늘 신규 +3</div></div>
+              <div class="kpi"><div class="kl"><svg class="ic"><use href="#i-truck"/></svg>오늘 매칭</div><div class="kv">38건</div><div class="kd up">어제 대비 +6</div></div>
+              <div class="kpi"><div class="kl"><svg class="ic"><use href="#i-coins"/></svg>이번 달 거래액</div><div class="kv">₩42,800,000</div><div class="kd">충전·인출 합계</div></div>
+              <div class="kpi"><div class="kl"><svg class="ic"><use href="#i-clock"/></svg>잔액 부족 위험</div><div class="kv">7명</div><div class="kd warn">준회원 전환 임박</div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:16px">
+              <div class="card">
+                <div class="ch"><h3>최근 승인 대기</h3><span class="more">전체 보기</span></div>
+                <table class="tbl">
+                  <thead><tr><th>이름</th><th>신청 장비</th><th>신청일</th><th>서류</th><th></th></tr></thead>
+                  <tbody>
+                    <tr><td class="nm">김기사</td><td>굴착기 · 04LC</td><td>06.15</td><td><span class="bdg ok">5/5</span></td><td><button class="btn2 gh sm">심사</button></td></tr>
+                    <tr><td class="nm">박중장</td><td>지게차 · 3.0t</td><td>06.14</td><td><span class="bdg ok">5/5</span></td><td><button class="btn2 gh sm">심사</button></td></tr>
+                    <tr><td class="nm">이건설</td><td>굴착기 · 21W</td><td>06.14</td><td><span class="bdg wait">4/5</span></td><td><button class="btn2 gh sm">보류</button></td></tr>
+                    <tr><td class="nm">최스카이</td><td>스카이 · 28m</td><td>06.13</td><td><span class="bdg ok">5/5</span></td><td><button class="btn2 gh sm">심사</button></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="card">
+                <div class="ch"><h3>오늘의 활동</h3></div>
+                <div style="padding:4px 18px 10px">
+                  <div style="display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid var(--line-2)"><span class="bdg ok" style="width:30px;height:30px;justify-content:center;border-radius:9px"><svg class="ic" style="width:15px;height:15px;color:var(--green)"><use href="#i-check"/></svg></span><div style="flex:1"><div style="font-size:13px;font-weight:700">매칭 성사 · 역삼동 일감</div><div style="font-size:11.5px;color:var(--ink-3);font-weight:600;margin-top:1px">소개비 48,000P 정산</div></div><span style="font-size:11.5px;color:var(--ink-3);font-weight:600">5분 전</span></div>
+                  <div style="display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid var(--line-2)"><span class="bdg blue" style="width:30px;height:30px;justify-content:center;border-radius:9px"><svg class="ic" style="width:15px;height:15px;color:var(--blue-ink)"><use href="#i-coins"/></svg></span><div style="flex:1"><div style="font-size:13px;font-weight:700">충전 110,000원 · 김재희</div><div style="font-size:11.5px;color:var(--ink-3);font-weight:600;margin-top:1px">가상계좌 입금 확인</div></div><span style="font-size:11.5px;color:var(--ink-3);font-weight:600">22분 전</span></div>
+                  <div style="display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid var(--line-2)"><span class="bdg wait" style="width:30px;height:30px;justify-content:center;border-radius:9px"><svg class="ic" style="width:15px;height:15px;color:#B45309"><use href="#i-bank"/></svg></span><div style="flex:1"><div style="font-size:13px;font-weight:700">인출 요청 150,000P · 박중장</div><div style="font-size:11.5px;color:var(--ink-3);font-weight:600;margin-top:1px">본인 계좌 확인 완료</div></div><span style="font-size:11.5px;color:var(--ink-3);font-weight:600">1시간 전</span></div>
+                  <div style="display:flex;align-items:center;gap:11px;padding:12px 0"><span class="bdg no" style="width:30px;height:30px;justify-content:center;border-radius:9px"><svg class="ic" style="width:15px;height:15px;color:#64748B"><use href="#i-doc"/></svg></span><div style="flex:1"><div style="font-size:13px;font-weight:700">신규 서류 제출 · 2건</div><div style="font-size:11.5px;color:var(--ink-3);font-weight:600;margin-top:1px">심사 대기열 추가</div></div><span style="font-size:11.5px;color:var(--ink-3);font-weight:600">2시간 전</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="cap">A · 대시보드</div>
+  </div>
+
+  <!-- B. 회원 승인 · 서류 심사 -->
+  <div class="cell">
+    <div class="win">
+      <div class="chrome"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">admin.jeonjungbae.kr / members / approval</span></div>
+      <div class="admin">
+        <aside class="side">
+          <div class="blogo"><span class="bk">전중</span><span><b>전중배</b><small>운영 콘솔</small></span></div>
+          <nav class="nav">
+            <a><svg class="ic"><use href="#i-grid"/></svg>대시보드</a>
+            <a class="on"><svg class="ic"><use href="#i-usercheck"/></svg>회원 승인<span class="nb">12</span></a>
+            <a><svg class="ic"><use href="#i-users"/></svg>회원 관리</a>
+            <a><svg class="ic"><use href="#i-star"/></svg>프리미엄 명단</a>
+            <a><svg class="ic"><use href="#i-truck"/></svg>일감·매칭</a>
+            <a><svg class="ic"><use href="#i-camera"/></svg>현장 사진</a>
+            <a><svg class="ic"><use href="#i-coins"/></svg>포인트·정산</a>
+            <a><svg class="ic"><use href="#i-cog"/></svg>설정</a>
+          </nav>
+          <div class="adm"><span class="av">운</span><span><b>운영팀</b><small>admin@jeonjungbae</small></span></div>
+        </aside>
+        <section class="panel">
+          <div class="topbar"><h2>회원 승인</h2><div class="seg" style="margin-left:18px"><button class="on">승인 대기 12</button><button>보류 3</button><button>반려</button><button>전체</button></div><div class="tb-search">  <svg class="ic"><use href="#i-search"/></svg>이름·연락처</div></div>
+          <div class="content">
+            <div style="display:grid;grid-template-columns:1.05fr 1fr;gap:16px">
+              <div class="card">
+                <table class="tbl">
+                  <thead><tr><th>이름</th><th>연락처</th><th>신청 장비</th><th>신청일</th></tr></thead>
+                  <tbody>
+                    <tr class="sel"><td class="nm">김기사</td><td>010-1234-5678</td><td>굴착기 04LC</td><td>06.15</td></tr>
+                    <tr><td class="nm">박중장</td><td>010-2233-4455</td><td>지게차 3.0t</td><td>06.14</td></tr>
+                    <tr><td class="nm">최스카이</td><td>010-7788-9900</td><td>스카이 28m</td><td>06.13</td></tr>
+                    <tr><td class="nm">정덤프</td><td>010-5566-1122</td><td>덤프 15t</td><td>06.13</td></tr>
+                    <tr><td class="nm">한로더</td><td>010-3344-7788</td><td>로더 · 중형</td><td>06.12</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="card">
+                <div class="ch"><h3>서류 심사 · 김기사</h3><span class="sub" style="margin-left:auto">010-1234-5678 · 굴착기 04LC</span></div>
+                <div style="padding:16px 18px">
+                  <div style="display:flex;align-items:center;gap:10px;margin-bottom:13px">
+                    <span style="font-size:12.5px;font-weight:700;color:var(--ink-2)">열람 모드</span>
+                    <div class="seg"><button>마스킹본</button><button class="on">원본(관리자)</button></div>
+                    <span style="margin-left:auto;display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--ink-3)"><svg class="ic" style="width:13px;height:13px"><use href="#i-eye"/></svg>발주자엔 마스킹본만</span>
+                  </div>
+                  <div class="docgrid">
+                    <div class="doctile"><div class="thumb"><span class="eye"><svg class="ic"><use href="#i-eye"/></svg>원본 열람</span></div><div class="dn"><b>사업자등록증</b><span class="bdg ok">확인</span></div></div>
+                    <div class="doctile"><div class="thumb"><span class="eye"><svg class="ic"><use href="#i-eye"/></svg>원본 열람</span></div><div class="dn"><b>조종사면허</b><span class="bdg ok">확인</span></div></div>
+                    <div class="doctile"><div class="thumb"><span class="eye"><svg class="ic"><use href="#i-eye"/></svg>원본 열람</span></div><div class="dn"><b>보험증권</b><span class="bdg ok">확인</span></div></div>
+                    <div class="doctile"><div class="thumb"><span class="eye"><svg class="ic"><use href="#i-eye"/></svg>원본 열람</span></div><div class="dn"><b>차량등록증</b><span class="bdg ok">확인</span></div></div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;margin-top:11px;padding:11px 13px;border:1px solid var(--line);border-radius:11px"><svg class="ic" style="width:18px;height:18px;color:var(--navy)"><use href="#i-bank"/></svg><div style="flex:1"><div style="font-size:12.5px;font-weight:700">통장 사본 · 농협 ****1234</div><div style="font-size:11px;color:var(--ink-3);font-weight:600">예금주 김재희 · 본인명 일치</div></div><span class="bdg ok">확인</span></div>
+                  <div class="acts">
+                    <button class="btn2 gh" style="flex:1;color:var(--red)"><svg class="ic"><use href="#i-x"/></svg>반려</button>
+                    <button class="btn2 green" style="flex:1.6"><svg class="ic"><use href="#i-check"/></svg>승인 · 정회원 전환</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="cap">B · 회원 승인 · 서류 심사(마스킹/원본)</div>
+  </div>
+
+  <!-- C. 프리미엄 명단 -->
+  <div class="cell">
+    <div class="win">
+      <div class="chrome"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">admin.jeonjungbae.kr / premium</span></div>
+      <div class="admin">
+        <aside class="side">
+          <div class="blogo"><span class="bk">전중</span><span><b>전중배</b><small>운영 콘솔</small></span></div>
+          <nav class="nav">
+            <a><svg class="ic"><use href="#i-grid"/></svg>대시보드</a>
+            <a><svg class="ic"><use href="#i-usercheck"/></svg>회원 승인<span class="nb">12</span></a>
+            <a><svg class="ic"><use href="#i-users"/></svg>회원 관리</a>
+            <a class="on"><svg class="ic"><use href="#i-star"/></svg>프리미엄 명단</a>
+            <a><svg class="ic"><use href="#i-truck"/></svg>일감·매칭</a>
+            <a><svg class="ic"><use href="#i-camera"/></svg>현장 사진</a>
+            <a><svg class="ic"><use href="#i-coins"/></svg>포인트·정산</a>
+            <a><svg class="ic"><use href="#i-cog"/></svg>설정</a>
+          </nav>
+          <div class="adm"><span class="av">운</span><span><b>운영팀</b><small>admin@jeonjungbae</small></span></div>
+        </aside>
+        <section class="panel">
+          <div class="topbar"><h2>프리미엄 명단</h2><div class="tb-search" style="margin-left:auto"><svg class="ic"><use href="#i-search"/></svg>이름·연락처 검색</div><button class="btn2 navy"><svg class="ic"><use href="#i-plus"/></svg>프리미엄 추가</button></div>
+          <div class="content">
+            <div class="note"><svg class="ic"><use href="#i-star"/></svg><span>프리미엄은 <b>관리자 지정 명단</b>입니다(만료·수량 없음). 프리미엄 회원은 <b>하루 1건 면제</b> 및 <b>우선배차권 없이 우선지원</b>이 가능합니다.</span></div>
+            <div class="card">
+              <div class="ch"><h3>프리미엄 회원 <span class="n">24</span>명</h3><span class="sub" style="margin-left:auto">전체 회원 1,182명</span></div>
+              <table class="tbl">
+                <thead><tr><th>이름</th><th>연락처</th><th>별점</th><th>누적 매칭</th><th>가입일</th><th style="text-align:right">프리미엄</th></tr></thead>
+                <tbody>
+                  <tr><td class="nm">김재희</td><td>010-1234-5678</td><td class="num"><span class="g">★ 4.8</span></td><td class="num">37건</td><td>2025.11.02</td><td style="text-align:right"><span class="tgl on"></span></td></tr>
+                  <tr><td class="nm">박중장</td><td>010-2233-4455</td><td class="num"><span class="g">★ 4.9</span></td><td class="num">52건</td><td>2025.09.15</td><td style="text-align:right"><span class="tgl on"></span></td></tr>
+                  <tr><td class="nm">이건설</td><td>010-8899-1010</td><td class="num">★ 4.5</td><td class="num">21건</td><td>2026.01.20</td><td style="text-align:right"><span class="tgl"></span></td></tr>
+                  <tr><td class="nm">최스카이</td><td>010-7788-9900</td><td class="num"><span class="g">★ 4.7</span></td><td class="num">44건</td><td>2025.08.30</td><td style="text-align:right"><span class="tgl on"></span></td></tr>
+                  <tr><td class="nm">정덤프</td><td>010-5566-1122</td><td class="num">★ 4.2</td><td class="num">12건</td><td>2026.03.11</td><td style="text-align:right"><span class="tgl"></span></td></tr>
+                  <tr><td class="nm">한로더</td><td>010-3344-7788</td><td class="num"><span class="g">★ 4.6</span></td><td class="num">29건</td><td>2025.12.05</td><td style="text-align:right"><span class="tgl on"></span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="cap">C · 프리미엄 명단 관리</div>
+  </div>
+
+  <!-- D. 포인트·정산 / 세무 Export -->
+  <div class="cell">
+    <div class="win">
+      <div class="chrome"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">admin.jeonjungbae.kr / settlement</span></div>
+      <div class="admin">
+        <aside class="side">
+          <div class="blogo"><span class="bk">전중</span><span><b>전중배</b><small>운영 콘솔</small></span></div>
+          <nav class="nav">
+            <a><svg class="ic"><use href="#i-grid"/></svg>대시보드</a>
+            <a><svg class="ic"><use href="#i-usercheck"/></svg>회원 승인<span class="nb">12</span></a>
+            <a><svg class="ic"><use href="#i-users"/></svg>회원 관리</a>
+            <a><svg class="ic"><use href="#i-star"/></svg>프리미엄 명단</a>
+            <a><svg class="ic"><use href="#i-truck"/></svg>일감·매칭</a>
+            <a><svg class="ic"><use href="#i-camera"/></svg>현장 사진</a>
+            <a class="on"><svg class="ic"><use href="#i-coins"/></svg>포인트·정산</a>
+            <a><svg class="ic"><use href="#i-cog"/></svg>설정</a>
+          </nav>
+          <div class="adm"><span class="av">운</span><span><b>운영팀</b><small>admin@jeonjungbae</small></span></div>
+        </aside>
+        <section class="panel">
+          <div class="topbar"><h2>포인트·정산</h2><div class="tb-search" style="margin-left:auto"><svg class="ic"><use href="#i-search"/></svg>회원 검색</div></div>
+          <div class="content">
+            <div class="filterbar">
+              <span class="pill-in"><svg class="ic"><use href="#i-cal"/></svg>2026.06.01 ~ 06.15</span>
+              <span class="pill-in">유형 · 전체<svg class="ic"><use href="#i-down"/></svg></span>
+              <div style="margin-left:auto;display:flex;gap:9px">
+                <button class="btn2 gh"><svg class="ic"><use href="#i-download"/></svg>CSV</button>
+                <button class="btn2 navy"><svg class="ic"><use href="#i-download"/></svg>엑셀 Export</button>
+              </div>
+            </div>
+            <div class="kpis" style="grid-template-columns:repeat(4,1fr)">
+              <div class="kpi"><div class="kl">총 충전</div><div class="kv n">₩12,400,000</div><div class="kd">부가세 포함 입금</div></div>
+              <div class="kpi"><div class="kl">총 인출</div><div class="kv r">₩8,920,000</div><div class="kd">본인 계좌 지급</div></div>
+              <div class="kpi"><div class="kl">소개비 정산</div><div class="kv">₩3,180,000</div><div class="kd">수령−지급 합계</div></div>
+              <div class="kpi"><div class="kl">PG 수수료</div><div class="kv">₩137,280</div><div class="kd">플랫폼 수수료 현재 0</div></div>
+            </div>
+            <div class="card">
+              <div class="ch"><h3>포인트 원장</h3><span class="sub" style="margin-left:auto">balance_after 포함 · 세무·감사용</span></div>
+              <table class="tbl">
+                <thead><tr><th>일시</th><th>회원</th><th>유형</th><th style="text-align:right">금액</th><th style="text-align:right">잔액(후)</th><th>메모</th></tr></thead>
+                <tbody>
+                  <tr><td class="num">06.12 16:30</td><td class="nm">김재희</td><td><span class="bdg ok">소개비 수령</span></td><td class="num n" style="text-align:right">+48,000P</td><td class="num" style="text-align:right">182,640</td><td>역삼동 일감</td></tr>
+                  <tr><td class="num">06.12 14:20</td><td class="nm">김재희</td><td><span class="bdg blue">충전</span></td><td class="num n" style="text-align:right">+30,000P</td><td class="num" style="text-align:right">134,640</td><td>가상계좌 입금</td></tr>
+                  <tr><td class="num">06.12 14:20</td><td class="nm">김재희</td><td><span class="bdg no">PG 수수료</span></td><td class="num r" style="text-align:right">−440P</td><td class="num" style="text-align:right">104,640</td><td>충전 수수료</td></tr>
+                  <tr><td class="num">06.12 11:05</td><td class="nm">박중장</td><td><span class="bdg no">인출</span></td><td class="num r" style="text-align:right">−150,000P</td><td class="num" style="text-align:right">40,180</td><td>농협 ****1234</td></tr>
+                  <tr><td class="num">06.11 17:05</td><td class="nm">이건설</td><td><span class="bdg prio">소개비 지급</span></td><td class="num r" style="text-align:right">−35,000P</td><td class="num" style="text-align:right">105,080</td><td>송파동 일감</td></tr>
+                  <tr><td class="num">06.11 00:05</td><td class="nm">전체(배치)</td><td><span class="bdg no">일일 차감</span></td><td class="num r" style="text-align:right">−1000P ×312</td><td class="num" style="text-align:right">—</td><td>정회원 유지</td></tr>
+                  <tr><td class="num">06.10 09:30</td><td class="nm">김재희</td><td><span class="bdg blue">충전</span></td><td class="num n" style="text-align:right">+100,000P</td><td class="num" style="text-align:right">290,180</td><td>가상계좌 입금</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="cap">D · 포인트·정산 / 세무 Export</div>
+  </div>
+
+  <!-- E. 회원 관리 (별점·평점 조정) -->
+  <div class="cell">
+    <div class="win">
+      <div class="chrome"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">admin.jeonjungbae.kr / members</span></div>
+      <div class="admin">
+        <aside class="side">
+          <div class="blogo"><span class="bk">전중</span><span><b>전중배</b><small>운영 콘솔</small></span></div>
+          <nav class="nav">
+            <a><svg class="ic"><use href="#i-grid"/></svg>대시보드</a>
+            <a><svg class="ic"><use href="#i-usercheck"/></svg>회원 승인<span class="nb">12</span></a>
+            <a class="on"><svg class="ic"><use href="#i-users"/></svg>회원 관리</a>
+            <a><svg class="ic"><use href="#i-star"/></svg>프리미엄 명단</a>
+            <a><svg class="ic"><use href="#i-truck"/></svg>일감·매칭</a>
+            <a><svg class="ic"><use href="#i-camera"/></svg>현장 사진</a>
+            <a><svg class="ic"><use href="#i-coins"/></svg>포인트·정산</a>
+            <a><svg class="ic"><use href="#i-cog"/></svg>설정</a>
+          </nav>
+          <div class="adm"><span class="av">운</span><span><b>운영팀</b><small>admin@jeonjungbae</small></span></div>
+        </aside>
+        <section class="panel">
+          <div class="topbar"><h2>회원 관리</h2><div class="seg" style="margin-left:18px"><button class="on">전체</button><button>정회원</button><button>준회원</button><button>승인대기</button></div><div class="tb-search"><svg class="ic"><use href="#i-search"/></svg>이름·연락처</div></div>
+          <div class="content">
+            <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:16px">
+              <div class="card">
+                <table class="tbl">
+                  <thead><tr><th>이름</th><th>등급</th><th>별점</th><th>평점</th><th style="text-align:right">포인트</th></tr></thead>
+                  <tbody>
+                    <tr class="sel"><td class="nm">김재희</td><td><span class="grade act">정회원</span></td><td class="num"><span class="g">★ 4.8</span></td><td class="num n">51</td><td class="num" style="text-align:right">182,640</td></tr>
+                    <tr><td class="nm">박중장</td><td><span class="grade act">정회원</span></td><td class="num"><span class="g">★ 4.9</span></td><td class="num n">52</td><td class="num" style="text-align:right">40,180</td></tr>
+                    <tr><td class="nm">이건설</td><td><span class="grade act">정회원</span></td><td class="num">★ 4.5</td><td class="num">50</td><td class="num" style="text-align:right">105,080</td></tr>
+                    <tr><td class="nm">정덤프</td><td><span class="grade susp">준회원</span></td><td class="num">★ 4.2</td><td class="num">49</td><td class="num r" style="text-align:right">80</td></tr>
+                    <tr><td class="nm">신규씨</td><td><span class="grade pend">승인대기</span></td><td class="num">—</td><td class="num">50</td><td class="num" style="text-align:right">0</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="card">
+                <div class="ch"><h3>회원 상세 · 김재희</h3><span class="grade act" style="margin-left:auto">정회원</span></div>
+                <div style="padding:6px 18px 18px">
+                  <div style="font-size:12.5px;color:var(--ink-2);font-weight:600;padding:12px 0 6px"><b class="n">#204815</b> · 010-1234-5678 · 굴착기 04LC · 누적 매칭 37건</div>
+                  <div class="kv2"><div><div class="k">별점 (발주자 평가)</div><div class="sub">유효별점 4.62 · 베이지안 · 사용자 공개</div></div><span style="font-size:16px;font-weight:800" class="g">★ 4.8</span></div>
+                  <div class="kv2"><div><div class="k">평점 (관리자 점수)</div><div class="sub">매칭 2순위 레버 · 사용자 비공개 · 기본 50, ±1 조정</div></div><span class="stepc"><button><svg class="ic"><use href="#i-minus"/></svg></button><span class="v">51</span><button><svg class="ic"><use href="#i-plus"/></svg></button></span></div>
+                  <div class="kv2"><div class="k">포인트 잔액</div><span style="font-size:14px;font-weight:800" class="n">182,640P</span></div>
+                  <div class="kv2"><div class="k">우선배차권 / 사진 인증</div><span style="font-size:13px;font-weight:700">2장 · 28/40점</span></div>
+                  <div style="display:flex;gap:8px;margin-top:13px;padding:11px 13px;background:#FAFBFC;border:1px solid var(--line);border-radius:11px;font-size:11.5px;font-weight:600;color:var(--ink-2);line-height:1.5"><svg class="ic" style="width:15px;height:15px;color:var(--ink-3);flex:none;margin-top:1px"><use href="#i-clock"/></svg><span>최근 평점 변경 · 2026.06.10 운영팀 <b>50 → 51</b> (우수 기사) <span style="color:var(--ink-3)">· admin_score_log 감사 기록</span></span></div>
+                  <div class="acts">
+                    <button class="btn2 gh" style="flex:1"><svg class="ic"><use href="#i-ban"/></svg>차단 관리</button>
+                    <button class="btn2 gh" style="flex:1;color:var(--red)">준회원 정지</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="cap">E · 회원 관리 (별점·평점 조정)</div>
+  </div>
+
+  <!-- F. 현장 사진 인증 검수 -->
+  <div class="cell">
+    <div class="win">
+      <div class="chrome"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">admin.jeonjungbae.kr / job-photos</span></div>
+      <div class="admin">
+        <aside class="side">
+          <div class="blogo"><span class="bk">전중</span><span><b>전중배</b><small>운영 콘솔</small></span></div>
+          <nav class="nav">
+            <a><svg class="ic"><use href="#i-grid"/></svg>대시보드</a>
+            <a><svg class="ic"><use href="#i-usercheck"/></svg>회원 승인<span class="nb">12</span></a>
+            <a><svg class="ic"><use href="#i-users"/></svg>회원 관리</a>
+            <a><svg class="ic"><use href="#i-star"/></svg>프리미엄 명단</a>
+            <a><svg class="ic"><use href="#i-truck"/></svg>일감·매칭</a>
+            <a class="on"><svg class="ic"><use href="#i-camera"/></svg>현장 사진</a>
+            <a><svg class="ic"><use href="#i-coins"/></svg>포인트·정산</a>
+            <a><svg class="ic"><use href="#i-cog"/></svg>설정</a>
+          </nav>
+          <div class="adm"><span class="av">운</span><span><b>운영팀</b><small>admin@jeonjungbae</small></span></div>
+        </aside>
+        <section class="panel">
+          <div class="topbar"><h2>현장 사진</h2><div class="seg" style="margin-left:18px"><button class="on">전체</button><button>검수 대기</button><button>만료 임박</button></div><div class="tb-search"><svg class="ic"><use href="#i-search"/></svg>일감·회원</div></div>
+          <div class="content">
+            <div class="note"><svg class="ic"><use href="#i-camera"/></svg><span>일감 사진은 <b>현장도착 · 작업 · 종료</b> 3단계로 적립(단계당 1점, 3종 완비 시 +1점). 누적 <b>40점마다 우선배차권 1장</b> 자동 지급. 원본은 1년 보관 후 관리자 백업·정리됩니다.</span></div>
+            <div class="kpis">
+              <div class="kpi"><div class="kl"><svg class="ic"><use href="#i-camera"/></svg>오늘 업로드</div><div class="kv">84장</div><div class="kd">28개 일감</div></div>
+              <div class="kpi"><div class="kl"><svg class="ic"><use href="#i-check"/></svg>완비 일감</div><div class="kv">21건</div><div class="kd up">3종 완비(+4점)</div></div>
+              <div class="kpi"><div class="kl"><svg class="ic"><use href="#i-star"/></svg>우선배차권 발급</div><div class="kv">6장</div><div class="kd">사진 인증 40점</div></div>
+              <div class="kpi"><div class="kl"><svg class="ic"><use href="#i-clock"/></svg>보관 만료 임박</div><div class="kv">12건</div><div class="kd warn">백업 대기</div></div>
+            </div>
+
+            <div class="card" style="margin-bottom:14px">
+              <div class="ch"><h3>역삼동 현장 · 04LC</h3><span class="jno" style="margin-left:9px">#260615-4821</span><span class="sub" style="margin-left:10px">김재희 · 2026.06.15</span><span class="bdg ok" style="margin-left:auto">+4점 · 완비</span></div>
+              <div class="phr">
+                <div class="ph"><div class="pi"><span class="lab">현장 도착</span><span class="eye"><svg class="ic"><use href="#i-eye"/></svg>원본</span></div><div class="pm"><span>08:05</span><span class="g">+1점</span></div></div>
+                <div class="ph"><div class="pi"><span class="lab">작업 중</span><span class="eye"><svg class="ic"><use href="#i-eye"/></svg>원본</span></div><div class="pm"><span>08:50</span><span class="g">+1점</span></div></div>
+                <div class="ph"><div class="pi"><span class="lab">작업 종료</span><span class="eye"><svg class="ic"><use href="#i-eye"/></svg>원본</span></div><div class="pm"><span>17:20</span><span class="g">+1점</span></div></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="ch"><h3>문정동 현장 · 21W</h3><span class="jno" style="margin-left:9px">#260614-3907</span><span class="sub" style="margin-left:10px">박중장 · 2026.06.14</span><span class="bdg wait" style="margin-left:auto">+2점 · 진행 중</span></div>
+              <div class="phr">
+                <div class="ph"><div class="pi"><span class="lab">현장 도착</span><span class="eye"><svg class="ic"><use href="#i-eye"/></svg>원본</span></div><div class="pm"><span>07:10</span><span class="g">+1점</span></div></div>
+                <div class="ph"><div class="pi"><span class="lab">작업 중</span><span class="eye"><svg class="ic"><use href="#i-eye"/></svg>원본</span></div><div class="pm"><span>09:30</span><span class="g">+1점</span></div></div>
+                <div class="ph"><div class="pi empty"><span class="lab" style="background:#9AA3B2">작업 종료</span><span class="none">미업로드</span></div><div class="pm"><span>—</span><span class="bdg wait" style="padding:2px 7px">대기</span></div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="cap">F · 현장 사진 인증 검수</div>
+  </div>
+
+  <!-- G. 일감·매칭 (일감 상세 + 관리자 메시지·별점) -->
+  <div class="cell">
+    <div class="win">
+      <div class="chrome"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">admin.jeonjungbae.kr / jobs</span></div>
+      <div class="admin">
+        <aside class="side">
+          <div class="blogo"><span class="bk">전중</span><span><b>전중배</b><small>운영 콘솔</small></span></div>
+          <nav class="nav">
+            <a><svg class="ic"><use href="#i-grid"/></svg>대시보드</a>
+            <a><svg class="ic"><use href="#i-usercheck"/></svg>회원 승인<span class="nb">12</span></a>
+            <a><svg class="ic"><use href="#i-users"/></svg>회원 관리</a>
+            <a><svg class="ic"><use href="#i-star"/></svg>프리미엄 명단</a>
+            <a class="on"><svg class="ic"><use href="#i-truck"/></svg>일감·매칭</a>
+            <a><svg class="ic"><use href="#i-camera"/></svg>현장 사진</a>
+            <a><svg class="ic"><use href="#i-coins"/></svg>포인트·정산</a>
+            <a><svg class="ic"><use href="#i-cog"/></svg>설정</a>
+          </nav>
+          <div class="adm"><span class="av">운</span><span><b>운영팀</b><small>admin@jeonjungbae</small></span></div>
+        </aside>
+        <section class="panel">
+          <div class="topbar"><h2>일감·매칭</h2><div class="tb-search" style="margin-left:18px;width:300px"><svg class="ic"><use href="#i-search"/></svg>일감번호 · 주소 · 회원 검색</div></div>
+          <div class="content">
+            <div style="display:grid;grid-template-columns:1.05fr 1fr;gap:16px">
+              <div class="card">
+                <table class="tbl">
+                  <thead><tr><th>일감번호</th><th>주소 · 기종</th><th>상태</th><th>기사</th></tr></thead>
+                  <tbody>
+                    <tr class="sel"><td><span class="jno">#260615-4821</span></td><td>역삼동 · 04LC</td><td><span class="bdg ok">배차완료</span></td><td class="nm">김재희</td></tr>
+                    <tr><td><span class="jno">#260615-3907</span></td><td>문정동 · 21W</td><td><span class="bdg blue">매칭중</span></td><td>—</td></tr>
+                    <tr><td><span class="jno">#260614-9072</span></td><td>양재동 · 06W</td><td><span class="bdg no">완료</span></td><td class="nm">한로더</td></tr>
+                    <tr><td><span class="jno">#260614-2685</span></td><td>삼성동 · 30LC</td><td><span class="bdg ok">배차완료</span></td><td class="nm">최스카이</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="card">
+                <div class="ch"><h3 class="jno" style="font-size:15px">#260615-4821</h3><span class="bdg ok" style="margin-left:auto">배차 완료</span></div>
+                <div style="padding:4px 18px 18px">
+                  <div class="kv2"><div class="k">주소 · 일시</div><span style="font-size:13px;font-weight:700">역삼동 123-4 · 06.15 08:00</span></div>
+                  <div class="kv2"><div class="k">대금 · 소개비</div><span style="font-size:13px;font-weight:700">1,200,000원 · <span class="g">소개비 120,000P</span></span></div>
+                  <div class="kv2"><div class="k">발주자 → 기사</div><span style="font-size:13px;font-weight:700">김현수 → 김재희</span></div>
+                  <div class="kv2"><div class="k">현장 사진</div><span style="font-size:13px;font-weight:700;color:var(--blue-ink)">3/3 완비 · +4점</span></div>
+
+                  <div style="margin-top:15px;border-top:1px solid var(--line);padding-top:14px">
+                    <div style="display:flex;align-items:center;margin-bottom:11px"><span style="font-size:13.5px;font-weight:800">관리자 메시지 · 별점 가점</span><span style="font-size:11.5px;color:var(--ink-3);font-weight:600;margin-left:auto">대상 · 기사 김재희</span></div>
+                    <div style="display:flex;gap:9px;margin-bottom:11px">
+                      <button class="starbtn on"><svg class="ic"><use href="#i-star"/></svg>별점 +1</button>
+                      <button class="starbtn"><svg class="ic"><use href="#i-star"/></svg>별점 +2</button>
+                    </div>
+                    <div style="display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap">
+                      <span class="tmpl">끝까지 완주 감사합니다</span>
+                      <span class="tmpl">뒷정리까지 완벽했어요</span>
+                      <span class="tmpl">발주자 만족도 최상</span>
+                    </div>
+                    <div class="ta">힘든 작업인데 끝까지 완주해주셔서 감사합니다. 발주자님이 뒷정리까지 아주 만족하셨어요. 앞으로도 좋은 매칭 부탁드립니다!</div>
+                    <button class="btn2 navy" style="width:100%;margin-top:12px;height:44px"><svg class="ic"><use href="#i-star"/></svg>메시지 + 별점 보내기</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="cap">G · 일감·매칭 (관리자 메시지·별점 발송)</div>
+  </div>
+
+  <!-- H. 설정 (app_settings 정책 수치) -->
+  <div class="cell">
+    <div class="win">
+      <div class="chrome"><span class="dots"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></span><span class="url">admin.jeonjungbae.kr / settings</span></div>
+      <div class="admin">
+        <aside class="side">
+          <div class="blogo"><span class="bk">전중</span><span><b>전중배</b><small>운영 콘솔</small></span></div>
+          <nav class="nav">
+            <a><svg class="ic"><use href="#i-grid"/></svg>대시보드</a>
+            <a><svg class="ic"><use href="#i-usercheck"/></svg>회원 승인<span class="nb">12</span></a>
+            <a><svg class="ic"><use href="#i-users"/></svg>회원 관리</a>
+            <a><svg class="ic"><use href="#i-star"/></svg>프리미엄 명단</a>
+            <a><svg class="ic"><use href="#i-truck"/></svg>일감·매칭</a>
+            <a><svg class="ic"><use href="#i-camera"/></svg>현장 사진</a>
+            <a><svg class="ic"><use href="#i-coins"/></svg>포인트·정산</a>
+            <a class="on"><svg class="ic"><use href="#i-cog"/></svg>설정</a>
+          </nav>
+          <div class="adm"><span class="av">운</span><span><b>운영팀</b><small>admin@jeonjungbae</small></span></div>
+        </aside>
+        <section class="panel">
+          <div class="topbar"><h2>설정 · 정책 수치</h2><span class="sub" style="margin-left:10px">app_settings</span><button class="btn2 navy" style="margin-left:auto"><svg class="ic"><use href="#i-check"/></svg>변경 저장</button></div>
+          <div class="content">
+            <div class="note"><svg class="ic"><use href="#i-cog"/></svg><span>모든 정책 수치는 <b>app_settings</b>에서 읽습니다(하드코딩 금지). 변경 시 즉시 매칭·정산 로직에 반영됩니다. 변경 이력은 감사 로그에 기록됩니다.</span></div>
+            <div class="setcol">
+              <div>
+                <div class="card" style="margin-bottom:16px">
+                  <div class="ch"><h3>매칭 · 배차</h3></div>
+                  <div class="srow"><div class="sl"><b>우선배차 윈도우</b><small>우선배차권자 우선지원 시간</small></div><div class="sv"><input class="vin" value="30"><span class="unit">초</span></div></div>
+                  <div class="srow"><div class="sl"><b>하루 차감</b><small>정회원 유지 일일 차감</small></div><div class="sv"><input class="vin" value="1000"><span class="unit">p</span></div></div>
+                  <div class="srow"><div class="sl"><b>베이지안 m</b><small>유효별점 신뢰 표본수</small></div><div class="sv"><input class="vin" value="10"><span class="unit"></span></div></div>
+                  <div class="srow"><div class="sl"><b>베이지안 c</b><small>전체 기준 평균 별점</small></div><div class="sv"><input class="vin" value="3.5"><span class="unit"></span></div></div>
+                </div>
+                <div class="card">
+                  <div class="ch"><h3>회원 등급</h3></div>
+                  <div class="srow"><div class="sl"><b>평점 기본값 (admin_score)</b><small>매칭 2순위·관리자 ±1</small></div><div class="sv"><input class="vin" value="50"><span class="unit"></span></div></div>
+                  <div class="srow"><div class="sl"><b>준회원 임계 잔액</b><small>미만 시 전체 차단</small></div><div class="sv"><input class="vin" value="1000"><span class="unit">p</span></div></div>
+                </div>
+              </div>
+              <div>
+                <div class="card" style="margin-bottom:16px">
+                  <div class="ch"><h3>포인트 · 수수료</h3></div>
+                  <div class="srow"><div class="sl"><b>소개비율</b><small>매칭 성사 소개비</small></div><div class="sv"><input class="vin" value="10"><span class="unit">%</span></div></div>
+                  <div class="srow"><div class="sl"><b>플랫폼 수수료</b><small>현재 0 · 추후 1,000p 예정</small></div><div class="sv"><input class="vin" value="0"><span class="unit">p</span></div></div>
+                  <div class="srow"><div class="sl"><b>PG 수수료</b><small>충전 시 포인트 차감</small></div><div class="sv"><input class="vin" value="440"><span class="unit">p</span></div></div>
+                  <div class="srow"><div class="sl"><b>부가세</b><small>충전 입금 가산</small></div><div class="sv"><input class="vin" value="10"><span class="unit">%</span></div></div>
+                </div>
+                <div class="card">
+                  <div class="ch"><h3>사진 인증 · 우선배차권</h3></div>
+                  <div class="srow"><div class="sl"><b>단계당 점수</b><small>도착·작업·종료 각</small></div><div class="sv"><input class="vin" value="1"><span class="unit">점</span></div></div>
+                  <div class="srow"><div class="sl"><b>완비 보너스</b><small>3종 완비 시</small></div><div class="sv"><input class="vin" value="1"><span class="unit">점</span></div></div>
+                  <div class="srow"><div class="sl"><b>배차권 발급 점수</b><small>누적 N점마다 1장</small></div><div class="sv"><input class="vin" value="40"><span class="unit">점</span></div></div>
+                  <div class="srow"><div class="sl"><b>지정배차 보상</b><small>N건당 우선배차권 1장</small></div><div class="sv"><input class="vin" value="3"><span class="unit">건</span></div></div>
+                  <div class="srow"><div class="sl"><b>사진 보관일</b><small>이후 관리자 백업·정리</small></div><div class="sv"><input class="vin" value="365"><span class="unit">일</span></div></div>
+                  <div class="srow"><div class="sl"><b>우선배차권 유효기간</b><small>조사 후 확정 (미정)</small></div><div class="sv"><input class="vin muted" value="미정"><span class="unit"></span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="cap">H · 설정 (app_settings 정책 수치)</div>
+  </div>
+
+</main>
+<script>
+/* 단일 화면 뷰어: 상단 버튼으로 한 화면씩 표시 */
+(function(){
+  var labels=['A 대시보드','B 회원 승인','C 프리미엄','D 정산','E 회원 관리','F 현장 사진','G 일감·매칭','H 설정'];
+  var cells=[].slice.call(document.querySelectorAll('.deck > .cell'));
+  var nav=document.getElementById('catnav');
+  function show(idx){
+    for(var k=0;k<nav.children.length;k++){ nav.children[k].className=(k===idx?'on':''); }
+    cells.forEach(function(cell,ci){ cell.style.display = ci===idx ? '' : 'none'; });
+    window.scrollTo(0,0);
+  }
+  labels.forEach(function(t,k){
+    var b=document.createElement('button'); b.type='button'; b.textContent=t;
+    b.addEventListener('click',function(){show(k);});
+    nav.appendChild(b);
+  });
+  show(0);
+})();
+</script>
+</body>
+</html>

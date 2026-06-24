@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($tools = 'magick','convert','gswin64c','gswin32c','inkscape','pdftoppm','pdftocairo','mutool','soffice'; foreach\\($t in $tools\\){ $c = Get-Command $t -ErrorAction SilentlyContinue; if\\($c\\){ \"FOUND: $t -> $\\($c.Source\\)\" } else { \"missing: $t\" } })",
+      "Bash(awk '{print $5}')",
+      "PowerShell($py = Get-Command python -ErrorAction SilentlyContinue; if\\($py\\){ \"python: $\\($py.Source\\)\"; python --version } else { \"no python\" }; $py3 = Get-Command py -ErrorAction SilentlyContinue; if\\($py3\\){ \"py launcher: $\\($py3.Source\\)\" })",
+      "PowerShell(python -m pip install --quiet --disable-pip-version-check pymupdf pillow 2>&1)",
+      "PowerShell(python -c \"import fitz, PIL; print\\('fitz', fitz.__doc__.splitlines\\(\\)[0] if fitz.__doc__ else 'ok'\\); print\\('pillow ok'\\)\")",
+      "PowerShell($env:PYTHONUTF8=1; python \"E:\\\\Work\\\\jangbi_nara_project\\\\mockups\\\\assets\\\\render_logo.py\")",
+      "PowerShell($env:PYTHONUTF8=1; python \"E:\\\\Work\\\\jangbi_nara_project\\\\mockups\\\\assets\\\\preview_logo.py\")",
+      "PowerShell($env:PYTHONUTF8=1; python \"E:\\\\Work\\\\jangbi_nara_project\\\\mockups\\\\assets\\\\crop_logo.py\")",
+      "PowerShell($env:PYTHONUTF8=1; python \"E:\\\\Work\\\\jangbi_nara_project\\\\mockups\\\\assets\\\\crop_logo2.py\")",
+      "PowerShell($paths = @\\(\"$env:ProgramFiles\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\",\"${env:ProgramFiles\\(x86\\)}\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\"\\); $edge = $paths | Where-Object { Test-Path $_ } | Select-Object -First 1; if\\($edge\\){ \"EDGE: $edge\" } else { \"no edge\"; Get-Command chrome -ErrorAction SilentlyContinue })",
+      "PowerShell($env:PYTHONUTF8=1; python \"E:\\\\Work\\\\jangbi_nara_project\\\\mockups\\\\assets\\\\crop_shot.py\")",
+      "PowerShell($env:PYTHONUTF8=1; python \"E:\\\\Work\\\\jangbi_nara_project\\\\mockups\\\\assets\\\\make_single.py\")",
+      "PowerShell($env:PYTHONUTF8=1; python \"E:\\\\Work\\\\jangbi_nara_project\\\\mockups\\\\assets\\\\crop_rows.py\")",
+      "PowerShell($env:PYTHONUTF8=1; python \"E:\\\\Work\\\\jangbi_nara_project\\\\mockups\\\\assets\\\\make_single_v4.py\")"
+    ]
+  }
+}

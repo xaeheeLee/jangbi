@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전중배 — 매칭 우선순위 (A안·B안·절충안)</title>
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+  :root{
+    --navy:#002F6C; --blue:#3B82F6; --bg:#EFF6FF;
+    --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb;
+    --amber:#b45309; --amber-bg:#fef3c7; --green:#15803d; --green-bg:#dcfce7;
+    --blue-bg:#dbeafe;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Pretendard Variable",Pretendard,-apple-system,system-ui,sans-serif;
+    line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:1000px; margin:0 auto; padding:30px 26px 40px;}
+  body.only-p1 #p2{display:none;}
+  body.only-p2 #p1{display:none;}
+
+  .ptitle{text-align:center; margin-bottom:6px;}
+  .ptitle h1{color:var(--navy); font-size:26px; font-weight:800; margin:0 0 5px;}
+  .ptitle p{color:var(--muted); margin:0; font-size:14.5px;}
+  .badge-q{display:inline-block; background:var(--navy); color:#fff; font-weight:700;
+    font-size:12.5px; padding:4px 12px; border-radius:999px; margin-top:12px;}
+  .badge-q.green{background:var(--green);}
+
+  .section-title{font-size:17px; font-weight:800; color:var(--navy);
+    margin:26px 0 13px; padding-left:10px; border-left:5px solid var(--blue);}
+
+  /* 우선순위 비교 */
+  .cmp{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  .panel{background:#fff; border:1px solid var(--line); border-radius:16px;
+    padding:18px; box-shadow:0 1px 3px rgba(0,0,0,.05);}
+  .panel h2{margin:0 0 4px; font-size:16px; font-weight:800;}
+  .panel .tag{font-size:12.5px; color:var(--muted); margin:0 0 14px;}
+  .panel.a h2{color:var(--green);}
+  .panel.b h2{color:var(--amber);}
+  .panel.c h2{color:var(--blue);}
+
+  .ladder{display:flex; flex-direction:column; gap:8px;}
+  .step{display:flex; align-items:center; gap:12px; border-radius:12px; padding:11px 13px; color:#fff;}
+  .step .rank{flex:0 0 auto; width:26px; height:26px; border-radius:50%;
+    background:rgba(255,255,255,.22); display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:14px;}
+  .step .txt b{display:block; font-size:14.5px; font-weight:700;}
+  .step .txt span{font-size:12px; opacity:.92;}
+  .s1{background:var(--navy);}
+  .s2{background:#1e4f9c;}
+  .s4{background:#9db8e0; color:#0b2a55;}
+  .s4 .rank{background:rgba(0,0,0,.12);}
+  .s3-a{background:var(--green-bg); color:#0b3d20; border:2px solid var(--green);}
+  .s3-a .rank{background:var(--green); color:#fff;}
+  .s3-b{background:var(--amber-bg); color:#5a3a05; border:2px solid var(--amber);}
+  .s3-b .rank{background:var(--amber); color:#fff;}
+  .s3-c{background:var(--blue-bg); color:#0b2f66; border:2px solid var(--blue);}
+  .s3-c .rank{background:var(--blue); color:#fff;}
+  .star{font-weight:800;}
+
+  .diffbar{margin-top:14px; background:#fff; border:1px dashed var(--blue);
+    border-radius:12px; padding:12px 16px; font-size:13.5px; text-align:center;}
+  .diffbar b{color:var(--navy);}
+
+  /* 요약 */
+  table.sum{width:100%; border-collapse:collapse; background:#fff; margin-top:6px;
+    border-radius:14px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.05); font-size:13.5px;}
+  table.sum th, table.sum td{padding:11px 14px; text-align:left; border-bottom:1px solid var(--line);}
+  table.sum thead th{background:var(--navy); color:#fff; font-weight:700;}
+  table.sum thead th.a{background:var(--green);}
+  table.sum thead th.b{background:var(--amber);}
+  table.sum td:first-child{font-weight:700; color:var(--navy); width:26%;}
+  table.sum tr:last-child td{border-bottom:none;}
+
+  /* 절충안 설명 카드 */
+  .howcards{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:6px;}
+  .how{background:#fff; border:1px solid var(--line); border-top:4px solid var(--blue);
+    border-radius:12px; padding:14px;}
+  .how .n{font-size:12px; font-weight:800; color:var(--blue); margin-bottom:4px;}
+  .how b{font-size:14.5px; display:block; margin-bottom:3px; color:var(--navy);}
+  .how span{font-size:12.5px; color:#555;}
+
+  /* 예시 */
+  .ex{background:#fff; border:1px solid var(--line); border-radius:16px;
+    padding:17px 19px; margin-bottom:14px; box-shadow:0 1px 3px rgba(0,0,0,.05);}
+  .ex h3{margin:0 0 4px; font-size:15.5px; font-weight:800; color:var(--navy);}
+  .ex .setup{font-size:13px; color:var(--muted); margin:0 0 13px;}
+  .drivers{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:13px;}
+  .dcard{flex:1 1 150px; border:1px solid var(--line); border-radius:12px; padding:10px 13px; background:#fafbff;}
+  .dcard.win{border-color:var(--blue); background:#f1f6ff; box-shadow:0 0 0 2px var(--blue-bg) inset;}
+  .dcard .nm{font-weight:800; font-size:14px; margin-bottom:5px;}
+  .dcard .row{font-size:12.5px; display:flex; justify-content:space-between; padding:1px 0;}
+  .dcard .row .k{color:var(--muted);}
+  .dcard .calc{font-size:12.5px; font-weight:800; color:var(--navy); margin-top:5px;
+    border-top:1px dashed var(--line); padding-top:5px;}
+  .pill{display:inline-block; font-size:11px; font-weight:700; padding:1px 7px; border-radius:999px;}
+  .pill.boost{background:var(--blue-bg); color:var(--blue);}
+  .res{border-radius:12px; padding:12px 14px; font-size:13.5px; background:var(--blue-bg); border:1px solid var(--blue);}
+  .res .lab{font-weight:800; font-size:12px; letter-spacing:.3px; margin-bottom:4px; color:var(--blue);}
+  .res .who b{font-size:14.5px;}
+  .res .why{font-size:12.5px; color:#333; margin-top:3px;}
+
+  .takeaway{margin-top:8px; background:var(--navy); color:#fff; border-radius:14px;
+    padding:15px 18px; font-size:14.5px; text-align:center;}
+  .takeaway b{color:#bfe3ff;}
+
+  @media (max-width:720px){ .cmp,.howcards{grid-template-columns:1fr;} }
+  @media print{ body{background:#fff;} .page{padding:14px 18px;} #p2{page-break-before:always;} }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1 : 우선순위 A vs B ============ -->
+<div class="page" id="p1">
+  <div class="ptitle">
+    <h1>전중배 매칭 우선순위 — A안 vs B안</h1>
+    <p>같은 일감에 여러 기사가 지원했을 때, <b>누가 먼저 배차받는가?</b></p>
+    <div class="badge-q">1·2·4단계는 동일 · 차이는 오직 3단계(평점)뿐</div>
+  </div>
+
+  <div class="section-title">우선순위 (위에서부터 먼저 배차)</div>
+  <div class="cmp">
+    <!-- A안 -->
+    <div class="panel a">
+      <h2>A안 · 현재안 (쌓은 평판)</h2>
+      <p class="tag">배민·당근처럼 실제 평가가 쌓이는 별점</p>
+      <div class="ladder">
+        <div class="step s1"><div class="rank">1</div><div class="txt"><b>프리미엄 명단</b><span>운영자 지정 · 최우선</span></div></div>
+        <div class="step s2"><div class="rank">2</div><div class="txt"><b>발주이력 많은 순</b><span>일감 많이 올린 기사 우선</span></div></div>
+        <div class="step s3-a"><div class="rank">3</div><div class="txt"><b class="star">★ 별점(쌓은 평판) 높은 순</b><span>실제 서비스 평가 — 사람마다 다름</span></div></div>
+        <div class="step s4"><div class="rank">4</div><div class="txt"><b>일반 선착순</b><span>먼저 지원한 순</span></div></div>
+      </div>
+    </div>
+    <!-- B안 -->
+    <div class="panel b">
+      <h2>B안 · 고객요구 (평점 도입)</h2>
+      <p class="tag">전원 5.0 고정 + 운영자가 일부에게 +0.2</p>
+      <div class="ladder">
+        <div class="step s1"><div class="rank">1</div><div class="txt"><b>프리미엄 명단</b><span>운영자 지정 · 최우선</span></div></div>
+        <div class="step s2"><div class="rank">2</div><div class="txt"><b>발주이력 많은 순</b><span>일감 많이 올린 기사 우선</span></div></div>
+        <div class="step s3-b"><div class="rank">3</div><div class="txt"><b class="star">★ 평점 높은 순</b><span>모두 5.0 고정 · 운영자 가점자만 5.2</span></div></div>
+        <div class="step s4"><div class="rank">4</div><div class="txt"><b>일반 선착순</b><span>먼저 지원한 순</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="diffbar">
+    🟰 <b>1·2·4단계는 두 안이 완전히 같습니다.</b> 바뀌는 건 <b>3단계 "평점"을 어떻게 만드느냐</b> 하나뿐 —
+    <b style="color:var(--green)">실제로 쌓느냐(A)</b> vs <b style="color:var(--amber)">운영자가 부여하느냐(B)</b>.
+  </div>
+
+  <div class="section-title">한눈 요약</div>
+  <table class="sum">
+    <thead><tr><th>비교 항목</th><th class="a">A안 · 현재안</th><th class="b">B안 · 평점 도입</th></tr></thead>
+    <tbody>
+      <tr><td>3단계 기준</td><td>실제로 쌓은 별점</td><td>5.0 고정 + 운영자 가점</td></tr>
+      <tr><td>누가 올라가나</td><td>서비스 잘한 기사</td><td>운영자가 미는 기사</td></tr>
+      <tr><td>일반 기사끼리</td><td>실력대로 차등</td><td>전원 동점 → 선착순(무의미)</td></tr>
+      <tr><td>성격</td><td>공정 배차(우리 핵심가치)</td><td>운영자 편애 — 1순위 프리미엄과 중복</td></tr>
+      <tr><td>운영 부담</td><td>평가 수집·관리 필요</td><td>거의 없음(가점만 지정)</td></tr>
+      <tr><td>분쟁 위험</td><td>별점 테러·명예훼손 소지</td><td>그 위험은 없음(대신 공정성 시비)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ============ PAGE 2 : 절충안 ============ -->
+<div class="page" id="p2">
+  <div class="ptitle">
+    <h1>절충안 — 별점은 유지, 운영자 의도는 '명시적 가점'으로</h1>
+    <p>A안의 <b>공정성</b> + B안의 <b>운영자 의도</b>를 둘 다 살리는 방법</p>
+    <div class="badge-q green">평점을 위조하지 않고, 밀어주기는 투명한 가점으로</div>
+  </div>
+
+  <div class="section-title">절충안 우선순위</div>
+  <div class="cmp">
+    <div class="panel c" style="grid-column:1 / -1;">
+      <h2>절충안 (Best of Both)</h2>
+      <p class="tag">3단계 별점은 그대로 쌓되, 운영자가 밀고 싶은 기사는 별도 '운영자 가점'을 더함</p>
+      <div class="ladder">
+        <div class="step s1"><div class="rank">1</div><div class="txt"><b>프리미엄 명단</b><span>운영자 지정 · 최우선 (변동 없음)</span></div></div>
+        <div class="step s2"><div class="rank">2</div><div class="txt"><b>발주이력 많은 순</b><span>일감 많이 올린 기사 우선 (변동 없음)</span></div></div>
+        <div class="step s3-c"><div class="rank">3</div><div class="txt"><b class="star">★ 유효별점 + 운영자 가점</b><span>실제 별점은 살리고, 필요 시 운영자가 +0.x 가산(상한·사유기록)</span></div></div>
+        <div class="step s4"><div class="rank">4</div><div class="txt"><b>일반 선착순</b><span>먼저 지원한 순 (변동 없음)</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">절충안의 3가지 핵심</div>
+  <div class="howcards">
+    <div class="how"><div class="n">① 공정성</div><b>별점은 그대로</b><span>실제 평가가 쌓여 잘하는 기사가 올라감. '공정 배차' 가치 유지.</span></div>
+    <div class="how"><div class="n">② 운영자 의도</div><b>명시적 가점 레버</b><span>특정 기사를 밀고 싶으면 +0.x 부여. 단 <b>상한·부여사유·이력</b>이 남아 투명. 프리미엄(1순위)보다 약한 미세조정.</span></div>
+    <div class="how"><div class="n">③ 신규 보호</div><b>콜드스타트 완화</b><span>베이지안 사전평균을 올려 평가 적은 신규 기사도 불리하지 않게.</span></div>
+  </div>
+
+  <div class="section-title">상황 예시</div>
+
+  <!-- 예시1 -->
+  <div class="ex">
+    <h3>예시 ① 평소(가점 없음) — 별점이 살아 있어 실력대로</h3>
+    <p class="setup">발주이력 동일한 세 기사, 운영자 가점 없음.</p>
+    <div class="drivers">
+      <div class="dcard win"><div class="nm">최기사 👑</div><div class="row"><span class="k">유효별점</span><b>4.8 ⭐</b></div><div class="calc">매칭점수 4.8</div></div>
+      <div class="dcard"><div class="nm">정기사</div><div class="row"><span class="k">유효별점</span><b>4.5</b></div><div class="calc">매칭점수 4.5</div></div>
+      <div class="dcard"><div class="nm">강기사</div><div class="row"><span class="k">유효별점</span><b>4.2</b></div><div class="calc">매칭점수 4.2</div></div>
+    </div>
+    <div class="res"><div class="lab">절충안 결과</div>
+      <div class="who">👑 <b>최기사</b> 배차 (4.8 &gt; 4.5 &gt; 4.2)</div>
+      <div class="why">B안과 달리 전원 동점이 아니라 <b>실력 차등이 그대로 반영</b>됩니다.</div>
+    </div>
+  </div>
+
+  <!-- 예시2 -->
+  <div class="ex">
+    <h3>예시 ② 운영자가 특정 기사를 밀고 싶을 때 — 투명한 가점으로</h3>
+    <p class="setup">발주이력 동일. 운영자가 '이기사'(무사고·사진인증 우수)를 가점 <b>+0.4</b>로 밀어줌.</p>
+    <div class="drivers">
+      <div class="dcard win"><div class="nm">김기사 👑</div><div class="row"><span class="k">유효별점</span><b>4.9 ⭐</b></div><div class="calc">매칭점수 4.9</div></div>
+      <div class="dcard"><div class="nm">이기사 <span class="pill boost">운영자 +0.4</span></div><div class="row"><span class="k">유효별점</span><span>4.4</span></div><div class="calc">매칭점수 4.4 + 0.4 = 4.8</div></div>
+      <div class="dcard"><div class="nm">박기사</div><div class="row"><span class="k">유효별점</span><b>4.6</b></div><div class="calc">매칭점수 4.6</div></div>
+    </div>
+    <div class="res"><div class="lab">절충안 결과</div>
+      <div class="who">👑 <b>김기사</b>(4.9) &gt; <b>이기사</b>(4.8, 가점) &gt; 박기사(4.6)</div>
+      <div class="why">운영자는 이기사를 박기사 위로 끌어올렸지만, <b>진짜 최고(김기사)는 그대로</b> — 의도 반영 + 공정성 보존.
+        가점 강도는 운영자가 상한 내에서 조절(더 강하게 밀 수도) 하며 <b>사유·이력이 기록</b>됩니다.</div>
+    </div>
+  </div>
+
+  <div class="takeaway">
+    절충안 = <b>A안의 공정성</b> + <b>B안의 운영자 의도</b>. 평점을 거짓으로 만들지 않으면서, 밀어주기는 <b>투명하고 추적 가능한 가점</b>으로.
+  </div>
+</div>
+
+<script>
+  var h = location.hash || "";
+  if (h.indexOf('p1') > -1) document.body.classList.add('only-p1');
+  if (h.indexOf('p2') > -1) document.body.classList.add('only-p2');
+</script>
+</body>
+</html>

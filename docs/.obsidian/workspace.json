@@ -1,0 +1,263 @@
+{
+  "main": {
+    "id": "44040ce3e8cd8ec4",
+    "type": "split",
+    "children": [
+      {
+        "id": "6570bca8b310ae5a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e2ee0fe22d53ce3e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "09_meeting_facilitator_guide_v1.0.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "09_meeting_facilitator_guide_v1.0"
+            }
+          },
+          {
+            "id": "23314e39889e09fc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "08_customer_meeting_prep_v1.1.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "08_customer_meeting_prep_v1.1"
+            }
+          },
+          {
+            "id": "7019d64bff40b9b3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "12_기능명세서_v1.1.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "12_기능명세서_v1.1"
+            }
+          }
+        ],
+        "currentTab": 1
+      },
+      {
+        "id": "5ad4a8e6e804e367",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a2a763525667f684",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "11_고객확인_질문지.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "11_고객확인_질문지"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "b6d182aae48e3743",
+    "type": "split",
+    "children": [
+      {
+        "id": "1f3b0e2482bdf642",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "22f5348d33bcef94",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "파일 탐색기"
+            }
+          },
+          {
+            "id": "79b576c1ddceee46",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "검색"
+            }
+          },
+          {
+            "id": "f47063795fb2551e",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "북마크"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "b793fe5363dc906a",
+    "type": "split",
+    "children": [
+      {
+        "id": "295fed9f87838942",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f946303d4ff100f3",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "06_customer_pre_brief_v1.0.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "06_customer_pre_brief_v1.0 의 백링크"
+            }
+          },
+          {
+            "id": "4fdc03cf31d8b4fc",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "06_customer_pre_brief_v1.0.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "06_customer_pre_brief_v1.0 의 나가는 링크"
+            }
+          },
+          {
+            "id": "b433805c9d6451cd",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "태그"
+            }
+          },
+          {
+            "id": "5f30779bc218212c",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "모든 속성"
+            }
+          },
+          {
+            "id": "e47df1df18839dc5",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "06_customer_pre_brief_v1.0.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "06_customer_pre_brief_v1.0 의 개요"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:빠른 전환기 열기": false,
+      "graph:그래프 뷰 열기": false,
+      "canvas:새 캔버스 만들기": false,
+      "daily-notes:오늘의 일일 노트 열기": false,
+      "templates:템플릿 삽입": false,
+      "command-palette:명령어 팔레트 열기": false,
+      "bases:새 베이스 생성하기": false
+    }
+  },
+  "active": "23314e39889e09fc",
+  "lastOpenFiles": [
+    "00_작업맥락_및_미해결항목.md",
+    "00_작업맥락_및_미해결항목.md.tmp.22904.7a25f8d613c8",
+    "12_기능명세서_v1.1.md.tmp.22904.8ed11c349907",
+    "01_dev_plan_v3.0.md.tmp.22904.940fee2fdc3e",
+    "01_dev_plan_v3.0.md.tmp.22904.f0e8d7992a0a",
+    "12_기능명세서_v1.1.md.tmp.22904.357ddfe6db7b",
+    "12_기능명세서_v1.1.md.tmp.22904.ebe65a825fd8",
+    "12_기능명세서_v1.1.md.tmp.22904.24a6cf4077a1",
+    "12_기능명세서_v1.1.md.tmp.22904.c63c3d38c9d6",
+    "01_dev_plan_v3.0.md.tmp.22904.57084740414a",
+    "01_dev_plan_v3.0.md.tmp.22904.ce029190e81e",
+    "08_customer_meeting_prep.md",
+    "2차 미팅 요약.md",
+    "12_기능명세서_v1.1.md",
+    "3차 미팅 요약.md",
+    "01_dev_plan_v3.0.md",
+    "11_고객확인_질문지.md",
+    "12_기능명세서_v1.0.md",
+    "10_가상계좌_PG_준비사항.md",
+    "09_meeting_facilitator_guide_v1.0.md",
+    "08_customer_meeting_prep_v1.1.md",
+    "02_meeting_agenda_v1.2.md",
+    "06_customer_pre_brief_v1.0.md",
+    "05_conversation_summary.md",
+    "04_dev_environment_cost.md"
+  ]
+}
