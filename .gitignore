@@ -20,6 +20,19 @@ build/
 .env
 .env.*
 *.key
+dart_define.json
+
+# Flutter 빌드/생성 산출물 (app/)
+app/.dart_tool/
+app/build/
+app/ios/Pods/
+app/ios/.symlinks/
+app/android/.gradle/
+app/.flutter-plugins-list
+
+# Supabase 로컬 (config.toml만 추적, 임시파일 제외)
+supabase/.branches/
+supabase/.temp/
 
 # 대용량 회의 녹화 (GitHub 100MB 초과 — 로컬 보관)
 docs/KakaoTalk_20260609_102535107.mp4

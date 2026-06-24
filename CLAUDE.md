@@ -114,6 +114,27 @@
 3. **실기기 테스트** 필수 (특히 갤럭시)
 4. **마일스톤 데모** 단위로 commit
 
+## 🗂️ 프로젝트 구조 & 실행 (Phase 0 완료)
+
+```
+jangbinara/
+├─ app/              ← Flutter 모바일 앱 (패키지명 jangbinara, org com.jangbinara)
+│  ├─ lib/core/      ← theme(디자인토큰)·config(env)·router(go_router)
+│  ├─ lib/features/  ← 기능별 화면 (home은 P1에서 대체)
+│  └─ dart_define.example.json  ← Supabase 키 주입 템플릿
+├─ supabase/         ← config.toml + (P1부터) migrations/
+├─ docs/ mockups/ archive/   ← 문서·시안
+└─ .claude/agents/   ← jangbi-reviewer, supabase-rpc
+```
+
+**실행:** Supabase 키를 `app/dart_define.json`(gitignore됨)에 넣고
+```
+cd app && flutter run --dart-define-from-file=dart_define.json
+```
+키 없이도 골격은 실행됨(홈 화면에 미설정 표시). 키는 Supabase 대시보드 → API Keys 의 **Publishable key**(`sb_publishable_...`, 구 anon key 대체).
+
+**상태:** Flutter 골격·디자인토큰·라우터·Supabase 초기화 완료(analyze 0 issue, 테스트 통과). 미설치(추후): Supabase 클라우드 프로젝트, Firebase/FCM, Android Studio(SDK·갤럭시 에뮬).
+
 ## 🔗 주요 참고 링크
 
 - Supabase 문서: https://supabase.com/docs
