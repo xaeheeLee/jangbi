@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../auth/auth_providers.dart';
+import '../dispatch/dispatch_screen.dart';
 import '../jobs/jobs_list_screen.dart';
 
 /// 하단 5탭 셸. 일감 / 배차 / 캘린더 / 지갑 / MY.
@@ -40,9 +41,11 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         children: [
           if (suspended) const _SuspendedBanner(),
           Expanded(
-            child: isJobsTab
-                ? const JobsListScreen()
-                : _Placeholder(label: tab.label),
+            child: switch (_index) {
+              0 => const JobsListScreen(),
+              1 => const DispatchScreen(),
+              _ => _Placeholder(label: tab.label),
+            },
           ),
         ],
       ),
