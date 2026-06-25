@@ -1,7 +1,7 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
@@ -58,15 +58,32 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Future<void> _pick(DocType type) async {
-    final result = await FilePicker.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: const ['jpg', 'jpeg', 'png', 'pdf'],
-      withData: false,
+    // 서류는 사진 촬영/갤러리로 첨부(모바일 가입 표준 UX).
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_camera_outlined),
+              title: const Text('카메라로 촬영'),
+              onTap: () => Navigator.pop(ctx, ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library_outlined),
+              title: const Text('갤러리에서 선택'),
+              onTap: () => Navigator.pop(ctx, ImageSource.gallery),
+            ),
+          ],
+        ),
+      ),
     );
-    final file = result?.files.singleOrNull;
-    if (file == null || file.path == null) return;
+    if (source == null) return;
+    final file = await ImagePicker().pickImage(source: source, imageQuality: 85);
+    if (file == null) return;
     setState(() {
-      _docs[type] = PickedDoc(path: file.path!, fileName: file.name);
+      _docs[type] = PickedDoc(path: file.path, fileName: file.name);
     });
   }
 
