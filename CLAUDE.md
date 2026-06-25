@@ -17,7 +17,7 @@
 2. **docs/12_기능명세서_v1.1.md** — 계약 별첨 기능 명세 ← 현행
 3. **docs/3차 미팅 요약.md** — 최신 의사결정
 4. **HANDOFF.md** / **docs/05_conversation_summary.md** — 전체 컨텍스트
-5. **mockups/Mockup_0425/** — UI 디자인 기준 (`index.html` 모바일, `admin.html` 관리자웹)
+5. **mockups/from_cluade_design.md** + **mockups/전중배 시안_최종예시.html** — ⭐ **UI 시각 정본(B 카드형)**. 디자인 시스템·기종배지·카운트다운·로그인 전부 이 문서 기준. 렌더 미리보기: `mockups/assets/row_login.png`·`row_list.png`·`row_detail.png`. 브랜드 로고: `mockups/assets/logo_color.png`(원형 엠블럼). ※ `mockups/Mockup_0425/`는 화면 구성·플로우 참고용(시각 기준 아님).
 
 ## 🛠️ 코딩 시 절대 원칙
 
