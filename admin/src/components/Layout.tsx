@@ -11,11 +11,11 @@ const NAV: NavItem[] = [
   { to: '/', label: '대시보드', ready: true },
   { to: '/members', label: '회원 승인', ready: true },
   { to: '/withdrawals', label: '인출 승인', ready: true },
-  { to: '/documents', label: '서류 마스킹', ready: false },
+  { to: '/documents', label: '서류 마스킹', ready: true },
   { to: '/premium', label: '프리미엄 명단', ready: true },
   { to: '/ratings', label: '평점 관리', ready: true },
   { to: '/jobs', label: '일감·매칭', ready: true },
-  { to: '/photos', label: '현장 사진', ready: false },
+  { to: '/photos', label: '현장 사진', ready: true },
   { to: '/tax', label: '세무 Export', ready: true },
 ]
 

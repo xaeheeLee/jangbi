@@ -10,7 +10,8 @@ import Premium from './pages/Premium'
 import Ratings from './pages/Ratings'
 import Tax from './pages/Tax'
 import Jobs from './pages/Jobs'
-import Placeholder from './pages/Placeholder'
+import Documents from './pages/Documents'
+import Photos from './pages/Photos'
 
 export default function App() {
   const { session, profile, loading } = useAuth()
@@ -35,11 +36,11 @@ export default function App() {
         <Route index element={<Dashboard />} />
         <Route path="members" element={<Members />} />
         <Route path="withdrawals" element={<Withdrawals />} />
-        <Route path="documents" element={<Placeholder title="서류 마스킹" />} />
+        <Route path="documents" element={<Documents />} />
         <Route path="premium" element={<Premium />} />
         <Route path="ratings" element={<Ratings />} />
         <Route path="jobs" element={<Jobs />} />
-        <Route path="photos" element={<Placeholder title="현장 사진" />} />
+        <Route path="photos" element={<Photos />} />
         <Route path="tax" element={<Tax />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
