@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_shadows.dart';
 import '../../jobs/job_format.dart';
 import '../dispatch_models.dart';
 
@@ -32,6 +33,7 @@ class TicketCard extends StatelessWidget {
             color: borderColor,
             width: urgent ? 1.4 : 1,
           ),
+          boxShadow: inactive ? null : AppShadows.sm,
         ),
         padding: const EdgeInsets.all(13),
         child: Row(

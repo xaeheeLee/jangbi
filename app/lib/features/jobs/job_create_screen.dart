@@ -7,6 +7,7 @@ import '../../core/supabase/supabase_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/widgets/app_text_field.dart';
 import '../../core/widgets/primary_button.dart';
+import '../../core/widgets/segmented_toggle.dart';
 import 'job_format.dart';
 import 'job_models.dart';
 import 'job_providers.dart';
@@ -83,9 +84,10 @@ class _JobCreateScreenState extends ConsumerState<JobCreateScreen> {
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
-                  _Segmented(
-                    designated: _designated,
-                    onChanged: (v) => setState(() => _designated = v),
+                  SegmentedToggle(
+                    labels: const ['일반 발주', '지정 발주'],
+                    selectedIndex: _designated ? 1 : 0,
+                    onChanged: (i) => setState(() => _designated = i == 1),
                   ),
                   const SizedBox(height: 16),
                   if (_designated) ...[
@@ -345,54 +347,6 @@ class _JobCreateScreenState extends ConsumerState<JobCreateScreen> {
     ScaffoldMessenger.of(context)
       ..clearSnackBars()
       ..showSnackBar(SnackBar(content: Text(msg)));
-  }
-}
-
-class _Segmented extends StatelessWidget {
-  const _Segmented({required this.designated, required this.onChanged});
-  final bool designated;
-  final ValueChanged<bool> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 44,
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: AppColors.bg,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.line),
-      ),
-      child: Row(
-        children: [
-          _seg('일반 발주', !designated, () => onChanged(false)),
-          _seg('지정 발주', designated, () => onChanged(true)),
-        ],
-      ),
-    );
-  }
-
-  Widget _seg(String label, bool on, VoidCallback onTap) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: on ? AppColors.navy : Colors.transparent,
-            borderRadius: BorderRadius.circular(9),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              color: on ? Colors.white : AppColors.ink2,
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
 

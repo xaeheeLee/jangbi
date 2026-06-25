@@ -36,9 +36,10 @@ class AppTextField extends StatelessWidget {
         Text(
           label,
           style: const TextStyle(
-            fontSize: 13,
+            fontSize: 12.5,
             fontWeight: FontWeight.w700,
             color: AppColors.ink2,
+            letterSpacing: -0.13,
           ),
         ),
         const SizedBox(height: 7),
@@ -53,6 +54,7 @@ class AppTextField extends StatelessWidget {
             fontSize: 15,
             fontWeight: FontWeight.w600,
             color: AppColors.ink,
+            letterSpacing: -0.15,
           ),
           decoration: InputDecoration(
             hintText: hintText,
@@ -63,7 +65,7 @@ class AppTextField extends StatelessWidget {
             suffixIcon: suffix,
             constraints: const BoxConstraints(minHeight: AppTheme.inputHeight),
             contentPadding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
           ),
         ),
       ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_shadows.dart';
 import '../../jobs/job_format.dart';
 import '../../jobs/job_models.dart';
 import '../dispatch_models.dart';
@@ -30,6 +31,7 @@ class ApplicationCard extends StatelessWidget {
           color: AppColors.card,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: borderColor, width: borderWidth),
+          boxShadow: rejected ? null : AppShadows.sm,
         ),
         padding: const EdgeInsets.all(13),
         child: Column(

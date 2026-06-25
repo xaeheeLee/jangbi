@@ -18,7 +18,9 @@ class StepIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // .stepper: 라벨 포함 칼럼(width 62) + 사이 연결선(.ln, margin-top 13).
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         for (var i = 0; i < steps.length; i++) ...[
           _Dot(
@@ -32,7 +34,7 @@ class StepIndicator extends StatelessWidget {
             Expanded(
               child: Container(
                 height: 2,
-                margin: const EdgeInsets.symmetric(horizontal: 6),
+                margin: const EdgeInsets.only(top: 13),
                 color: i < currentIndex ? AppColors.navy : AppColors.line,
               ),
             ),
@@ -53,39 +55,55 @@ class _Dot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final active = state != _StepState.todo;
-    final circleColor = active ? AppColors.navy : AppColors.line;
-    final fg = active ? Colors.white : AppColors.ink3;
+    // .stepper .st .sd: 27x27 원. done=E7F6EC/green check, on=navy/흰글씨, todo=EAEDF2/ink-3.
+    late final Color circleBg;
+    late final Color circleFg;
+    switch (state) {
+      case _StepState.done:
+        circleBg = AppColors.okBg;
+        circleFg = AppColors.okFg;
+      case _StepState.active:
+        circleBg = AppColors.navy;
+        circleFg = Colors.white;
+      case _StepState.todo:
+        circleBg = AppColors.line;
+        circleFg = AppColors.ink3;
+    }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 28,
-          height: 28,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(color: circleColor, shape: BoxShape.circle),
-          child: state == _StepState.done
-              ? const Icon(Icons.check, size: 16, color: Colors.white)
-              : Text(
-                  '${index + 1}',
-                  style: TextStyle(
-                    color: fg,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 13,
+    return SizedBox(
+      width: 62,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 27,
+            height: 27,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(color: circleBg, shape: BoxShape.circle),
+            child: state == _StepState.done
+                ? Icon(Icons.check, size: 14, color: circleFg)
+                : Text(
+                    '${index + 1}',
+                    style: TextStyle(
+                      color: circleFg,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-        ),
-        const SizedBox(height: 5),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w700,
-            color: active ? AppColors.navy : AppColors.ink3,
           ),
-        ),
-      ],
+          const SizedBox(height: 6),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: state == _StepState.active
+                  ? AppColors.navy
+                  : AppColors.ink3,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

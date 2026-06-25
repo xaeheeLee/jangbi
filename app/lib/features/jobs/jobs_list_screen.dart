@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_shadows.dart';
 import 'job_models.dart';
 import 'job_providers.dart';
 import 'widgets/job_card.dart';
@@ -20,11 +21,7 @@ class JobsListScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.bg,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.navy,
-        onPressed: () => context.push('/job/create'),
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
+      floatingActionButton: _AddFab(onTap: () => context.push('/job/create')),
       body: Column(
         children: [
           _ListHead(count: jobsAsync.value?.length),
@@ -168,6 +165,34 @@ class _Chip extends StatelessWidget {
             color: selected ? Colors.white : AppColors.ink,
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// .fab.navy: 56x56, radius 19, navy 그라데이션 + shadow-lift, 아이콘 26.
+class _AddFab extends StatelessWidget {
+  const _AddFab({required this.onTap});
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 56,
+        height: 56,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF0A4AA6), AppColors.navy],
+          ),
+          borderRadius: BorderRadius.circular(19),
+          boxShadow: AppShadows.lift,
+        ),
+        child: const Icon(Icons.add, color: Colors.white, size: 26),
       ),
     );
   }

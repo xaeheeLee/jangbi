@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_shadows.dart';
 import '../auth/auth_providers.dart';
 import '../jobs/job_format.dart';
 import 'wallet_models.dart';
@@ -83,6 +84,7 @@ class WalletScreen extends ConsumerWidget {
                   color: AppColors.card,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: AppColors.line),
+                  boxShadow: AppShadows.sm,
                 ),
                 child: Column(
                   children: [
@@ -131,18 +133,12 @@ class _BalanceCard extends StatelessWidget {
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [AppColors.navy, AppColors.navyLight],
+          colors: [AppColors.navy, AppColors.navyHi],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(18),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x22000000),
-            blurRadius: 16,
-            offset: Offset(0, 6),
-          ),
-        ],
+        boxShadow: AppShadows.lift,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,17 +229,24 @@ class _CardButton extends StatelessWidget {
     return SizedBox(
       height: 46,
       child: filled
-          ? FilledButton(
-              onPressed: onTap,
-              style: FilledButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: AppColors.navy,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(13)),
-                textStyle: const TextStyle(
-                    fontSize: 15, fontWeight: FontWeight.w800),
+          ? DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(13),
+                boxShadow: AppShadows.whiteBtn,
               ),
-              child: Text(label),
+              child: FilledButton(
+                onPressed: onTap,
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: AppColors.navy,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(13)),
+                  textStyle: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.w800),
+                ),
+                child: Text(label),
+              ),
             )
           : OutlinedButton(
               onPressed: onTap,
@@ -313,6 +316,7 @@ class _WithdrawalList extends StatelessWidget {
         color: AppColors.card,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.line),
+        boxShadow: AppShadows.sm,
       ),
       child: Column(
         children: [

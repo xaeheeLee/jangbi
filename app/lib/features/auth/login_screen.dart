@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_shadows.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/app_text_field.dart';
 import '../../core/widgets/primary_button.dart';
@@ -79,43 +80,52 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final topPad = MediaQuery.of(context).padding.top;
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.fromLTRB(24, topPad + 48, 24, 40),
+      padding: EdgeInsets.fromLTRB(24, topPad + 52, 24, 44),
       decoration: const BoxDecoration(
+        // .hero-navy: linear-gradient(170deg, navy 0%, #01285A 60%, #01224d 100%)
+        // 아래로 갈수록 더 진한 네이비. 170deg ≈ 위→아래(살짝 좌측).
         gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          transform: GradientRotation(170 * 3.1415926 / 180),
-          colors: [AppColors.navy, AppColors.navyLight],
+          begin: Alignment(-0.17, -1),
+          end: Alignment(0.17, 1),
+          colors: [AppColors.navy, AppColors.heroMid, AppColors.heroEnd],
+          stops: [0.0, 0.6, 1.0],
         ),
       ),
       child: Column(
         children: [
+          // .logo-badge: 92x92, radius 26, 흰배경 + logo-badge 그림자 + inset white.
           Container(
-            width: 64,
-            height: 64,
+            width: 92,
+            height: 92,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.14),
-              borderRadius: BorderRadius.circular(18),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(26),
+              boxShadow: AppShadows.logoBadge,
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.6),
+                width: 1,
+              ),
             ),
-            child: const Icon(Icons.construction, color: Colors.white, size: 34),
+            child: const Icon(Icons.construction, color: AppColors.navy, size: 44),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           const Text(
             '전국중장비배차연합',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 22,
+              fontSize: 24,
               fontWeight: FontWeight.w800,
+              letterSpacing: -0.48,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 7),
           Text(
             '믿을 수 있는 기사 간 배차 매칭',
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.82),
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
+              fontSize: 13.5,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -128,8 +138,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-        border: Border.all(color: AppColors.line),
+        borderRadius: BorderRadius.circular(AppTheme.rLg),
+        boxShadow: AppShadows.card,
       ),
       child: Form(
         key: _formKey,

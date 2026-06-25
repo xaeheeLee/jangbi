@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/config/env.dart';
 import '../../core/supabase/supabase_service.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/widgets/primary_button.dart';
 import '../auth/auth_providers.dart';
 import 'job_format.dart';
 import 'job_models.dart';
@@ -389,37 +390,40 @@ class _ActionBar extends StatelessWidget {
 
   Widget _buildButtons(BuildContext context, bool closed) {
     if (closed) {
-      return SizedBox(
-        height: 50,
-        width: double.infinity,
-        child: FilledButton(
-          onPressed: null,
-          style: FilledButton.styleFrom(
-            disabledBackgroundColor: AppColors.ink3,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(13)),
-          ),
-          child: const Text('마감된 일감입니다'),
-        ),
+      return const PrimaryButton(
+        label: '마감된 일감입니다',
+        enabled: false,
       );
     }
 
     if (job.status == JobStatus.designatedWindow) {
-      return _bigButton(
+      return PrimaryButton(
         label: '지정배차 지원',
-        color: AppColors.navy,
-        onTap: () => onApply(),
+        loading: submitting,
+        onPressed: () => onApply(),
       );
     }
 
     if (job.status == JobStatus.priorityWindow) {
+      // .actions: 일반 지원(ghost) | 우선 지원(red) 1 : 1.35 비율.
       return Row(
         children: [
           Expanded(
-            child: _bigButton(
+            flex: 100,
+            child: PrimaryButton(
+              label: '일반 지원',
+              variant: PrimaryButtonVariant.ghost,
+              onPressed: submitting ? null : () => onApply(),
+            ),
+          ),
+          const SizedBox(width: 11),
+          Expanded(
+            flex: 135,
+            child: PrimaryButton(
               label: '우선 지원',
-              color: AppColors.red,
-              onTap: () => onApply(priority: true),
+              variant: PrimaryButtonVariant.red,
+              loading: submitting,
+              onPressed: () => onApply(priority: true),
             ),
           ),
         ],
@@ -427,40 +431,10 @@ class _ActionBar extends StatelessWidget {
     }
 
     // open
-    return _bigButton(
+    return PrimaryButton(
       label: '일반 지원',
-      color: AppColors.navy,
-      onTap: () => onApply(),
-    );
-  }
-
-  Widget _bigButton({
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return SizedBox(
-      height: 50,
-      width: double.infinity,
-      child: FilledButton(
-        onPressed: submitting ? null : onTap,
-        style: FilledButton.styleFrom(
-          backgroundColor: color,
-          disabledBackgroundColor: AppColors.ink3,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
-        ),
-        child: submitting
-            ? const SizedBox(
-                width: 22,
-                height: 22,
-                child: CircularProgressIndicator(
-                    strokeWidth: 2.4, color: Colors.white),
-              )
-            : Text(label,
-                style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.w700)),
-      ),
+      loading: submitting,
+      onPressed: () => onApply(),
     );
   }
 }
@@ -472,25 +446,29 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    // .irow: padding 14px 0, border-bottom 1px line-2, k=ink-3, v=ink/w700/우측정렬.
+    return Container(
       padding: const EdgeInsets.symmetric(vertical: 11),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: AppColors.line2)),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 76,
-            child: Text(k,
-                style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.ink3)),
-          ),
+          Text(k,
+              style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.ink3)),
+          const SizedBox(width: 14),
           Expanded(
             child: Text(v,
+                textAlign: TextAlign.right,
                 style: const TextStyle(
                     fontSize: 13.5,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.ink)),
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.ink,
+                    height: 1.5)),
           ),
         ],
       ),

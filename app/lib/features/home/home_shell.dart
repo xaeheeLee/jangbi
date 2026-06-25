@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/widgets/app_bottom_nav.dart';
 import '../auth/auth_providers.dart';
 import '../dispatch/dispatch_screen.dart';
 import '../jobs/jobs_list_screen.dart';
@@ -21,13 +21,13 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   // PREVIEW_TAB: 개발용 초기 탭 주입(스크린샷). 기본 0(일감).
   int _index = const int.fromEnvironment('PREVIEW_TAB');
 
-  static const _tabs = <_TabDef>[
-    _TabDef('일감', Icons.work_outline, Icons.work),
-    _TabDef('배차', Icons.local_shipping_outlined, Icons.local_shipping),
-    _TabDef('캘린더', Icons.calendar_today_outlined, Icons.calendar_today),
-    _TabDef('지갑', Icons.account_balance_wallet_outlined,
+  static const _tabs = <AppNavItem>[
+    AppNavItem('일감', Icons.work_outline, Icons.work),
+    AppNavItem('배차', Icons.local_shipping_outlined, Icons.local_shipping),
+    AppNavItem('캘린더', Icons.calendar_today_outlined, Icons.calendar_today),
+    AppNavItem('지갑', Icons.account_balance_wallet_outlined,
         Icons.account_balance_wallet),
-    _TabDef('MY', Icons.person_outline, Icons.person),
+    AppNavItem('MY', Icons.person_outline, Icons.person),
   ];
 
   @override
@@ -52,37 +52,13 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           ),
         ],
       ),
-      bottomNavigationBar: SizedBox(
-        height: AppTheme.tabBarHeight + MediaQuery.of(context).padding.bottom,
-        child: BottomNavigationBar(
-          currentIndex: _index,
-          onTap: (i) => setState(() => _index = i),
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: AppColors.card,
-          selectedItemColor: AppColors.navy,
-          unselectedItemColor: AppColors.ink3,
-          selectedFontSize: 11,
-          unselectedFontSize: 11,
-          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w700),
-          items: [
-            for (final t in _tabs)
-              BottomNavigationBarItem(
-                icon: Icon(t.icon),
-                activeIcon: Icon(t.activeIcon),
-                label: t.label,
-              ),
-          ],
-        ),
+      bottomNavigationBar: AppBottomNav(
+        items: _tabs,
+        currentIndex: _index,
+        onTap: (i) => setState(() => _index = i),
       ),
     );
   }
-}
-
-class _TabDef {
-  const _TabDef(this.label, this.icon, this.activeIcon);
-  final String label;
-  final IconData icon;
-  final IconData activeIcon;
 }
 
 class _SuspendedBanner extends StatelessWidget {

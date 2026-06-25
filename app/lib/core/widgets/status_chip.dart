@@ -41,13 +41,13 @@ class StatusChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(999),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         label,
         style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
+          fontSize: 11,
+          fontWeight: FontWeight.w800,
           color: fg,
         ),
       ),

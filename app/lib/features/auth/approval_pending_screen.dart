@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_shadows.dart';
 import '../../core/widgets/status_chip.dart';
 import 'auth_controller.dart';
 import 'auth_providers.dart';
@@ -65,6 +66,7 @@ class ApprovalPendingScreen extends ConsumerWidget {
                   color: AppColors.card,
                   borderRadius: BorderRadius.circular(18),
                   border: Border.all(color: AppColors.line),
+                  boxShadow: AppShadows.sm,
                 ),
                 child: Column(
                   children: [
