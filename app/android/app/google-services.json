@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "798216775364",
+    "project_id": "jeonjungbae-41791",
+    "storage_bucket": "jeonjungbae-41791.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:798216775364:android:9dbfa2b0f30d5b2fa70b91",
+        "android_client_info": {
+          "package_name": "com.jangbinara.jangbinara"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdr3I2CvgHoT0h2_19VMnSyi4kNoT4ejk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
