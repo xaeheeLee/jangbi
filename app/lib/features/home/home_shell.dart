@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../auth/auth_providers.dart';
+import '../jobs/jobs_list_screen.dart';
 
 /// 하단 5탭 셸. 일감 / 배차 / 캘린더 / 지갑 / MY.
 /// 각 탭 본문은 P2 이후 구현 — 현재는 placeholder.
@@ -30,14 +31,19 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   Widget build(BuildContext context) {
     final suspended = ref.watch(membershipStatusProvider) == 'suspended';
     final tab = _tabs[_index];
+    final isJobsTab = _index == 0;
 
     return Scaffold(
       backgroundColor: AppColors.bg,
-      appBar: AppBar(title: Text(tab.label)),
+      appBar: AppBar(title: Text(isJobsTab ? '일감' : tab.label)),
       body: Column(
         children: [
           if (suspended) const _SuspendedBanner(),
-          Expanded(child: _Placeholder(label: tab.label)),
+          Expanded(
+            child: isJobsTab
+                ? const JobsListScreen()
+                : _Placeholder(label: tab.label),
+          ),
         ],
       ),
       bottomNavigationBar: SizedBox(

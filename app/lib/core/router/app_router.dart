@@ -8,6 +8,8 @@ import '../../features/auth/login_screen.dart';
 import '../../features/auth/signup_screen.dart';
 import '../../features/auth/splash_screen.dart';
 import '../../features/home/home_shell.dart';
+import '../../features/jobs/job_create_screen.dart';
+import '../../features/jobs/job_detail_screen.dart';
 import '../config/env.dart';
 
 /// 앱 라우터. go_router + redirect 로 인증/승인 상태에 따라 분기한다.
@@ -27,6 +29,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/home', builder: (_, _) => const HomeShell()),
       GoRoute(path: '/splash', builder: (_, _) => const SplashScreen()),
+      GoRoute(path: '/job/create', builder: (_, _) => const JobCreateScreen()),
+      GoRoute(
+        path: '/job/:id',
+        builder: (_, state) =>
+            JobDetailScreen(jobId: state.pathParameters['id']!),
+      ),
     ],
     redirect: (context, state) {
       // Supabase 미설정이면 골격 확인을 위해 home 진입 허용.

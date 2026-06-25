@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app.dart';
@@ -7,6 +8,9 @@ import 'core/config/env.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // intl 한국 로케일(날짜·요일) 데이터 초기화.
+  await initializeDateFormatting('ko_KR');
 
   // Supabase 미설정 상태에서도 골격이 실행되도록 가드.
   // 설정 방법은 core/config/env.dart 참고.

@@ -1,0 +1,535 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../core/config/env.dart';
+import '../../core/supabase/supabase_service.dart';
+import '../../core/theme/app_colors.dart';
+import '../auth/auth_providers.dart';
+import 'job_format.dart';
+import 'job_models.dart';
+import 'job_providers.dart';
+
+/// 일감 상세(목업 ③). 지도 placeholder + 작업정보 + 지원 버튼.
+/// 지원은 status 별로 apply_with_priority / apply_general / apply_designated RPC 호출.
+class JobDetailScreen extends ConsumerStatefulWidget {
+  const JobDetailScreen({super.key, required this.jobId});
+  final String jobId;
+
+  @override
+  ConsumerState<JobDetailScreen> createState() => _JobDetailScreenState();
+}
+
+class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
+  bool _submitting = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final jobAsync = ref.watch(jobDetailProvider(widget.jobId));
+    return Scaffold(
+      backgroundColor: AppColors.bg,
+      appBar: AppBar(title: const Text('일감 상세')),
+      body: jobAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Text(mapJobRpcError(e),
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: AppColors.ink2)),
+          ),
+        ),
+        data: (job) {
+          if (job == null) {
+            return const Center(child: Text('일감을 찾을 수 없습니다.'));
+          }
+          return _Body(
+            job: job,
+            submitting: _submitting,
+            onApply: ({bool priority = false}) =>
+                _apply(job, priority: priority),
+          );
+        },
+      ),
+    );
+  }
+
+  Future<void> _apply(Job job, {bool priority = false}) async {
+    // 우선 윈도우 + 장비 불일치 시 확인 팝업 후 force_apply.
+    Future<void> run() async {
+      setState(() => _submitting = true);
+      try {
+        final client = SupabaseService.client;
+        final uid = client.auth.currentUser?.id;
+        Map<String, dynamic> res;
+        switch (job.status) {
+          case JobStatus.priorityWindow:
+            res = (await client.rpc('apply_with_priority', params: {
+              'p_job_id': job.id,
+              'p_applicant_id': uid,
+              'p_force_apply': true,
+            })) as Map<String, dynamic>;
+          case JobStatus.open:
+            res = (await client.rpc('apply_general', params: {
+              'p_job_id': job.id,
+              'p_applicant_id': uid,
+              'p_force_apply': true,
+            })) as Map<String, dynamic>;
+          case JobStatus.designatedWindow:
+            final pw = await _askDesignatePassword();
+            if (pw == null) {
+              setState(() => _submitting = false);
+              return;
+            }
+            res = (await client.rpc('apply_designated', params: {
+              'p_job_id': job.id,
+              'p_applicant_id': uid,
+              'p_password': pw,
+            })) as Map<String, dynamic>;
+          default:
+            throw Exception('JOB_UNAVAILABLE');
+        }
+        if (!mounted) return;
+        final status = res['status'] as String?;
+        final msg = status == 'matched'
+            ? '배차가 성사되었습니다.'
+            : '지원이 접수되었습니다. 마감 시 결과가 안내됩니다.';
+        _snack(msg);
+        ref.invalidate(jobDetailProvider(widget.jobId));
+      } catch (e) {
+        if (mounted) _snack(mapJobRpcError(e));
+      } finally {
+        if (mounted) setState(() => _submitting = false);
+      }
+    }
+
+    // priority 윈도우에서 장비 불일치면 확인 팝업.
+    if (priority && _hasEquipmentMismatch(job)) {
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('장비 요건 불일치'),
+          content: const Text('보유 장비가 일감 요건과 일치하지 않습니다.\n그래도 지원하시겠습니까?'),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text('취소')),
+            FilledButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text('지원')),
+          ],
+        ),
+      );
+      if (ok != true) return;
+    }
+    await run();
+  }
+
+  /// 본인 보유 장비 vs 일감 요건 단순 비교(카테고리 기준). 최종 판정은 RPC.
+  bool _hasEquipmentMismatch(Job job) {
+    if (!Env.isSupabaseConfigured) return false;
+    final myCat =
+        ref.read(profileProvider).value?['equipment_category'] as String?;
+    if (myCat == null) return true;
+    final cats = {
+      if (job.requiredCategory != null) job.requiredCategory,
+      ...job.options.map((o) => o.category),
+    };
+    if (cats.isEmpty) return false;
+    return !cats.contains(myCat);
+  }
+
+  Future<String?> _askDesignatePassword() {
+    final ctrl = TextEditingController();
+    return showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('지정배차 지원'),
+        content: TextField(
+          controller: ctrl,
+          autofocus: true,
+          decoration: const InputDecoration(
+            labelText: '지정 비밀번호',
+            hintText: '발주자가 알려준 비밀번호',
+          ),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('취소')),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, ctrl.text.trim()),
+            child: const Text('지원'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _snack(String msg) {
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(SnackBar(content: Text(msg)));
+  }
+}
+
+class _Body extends StatelessWidget {
+  const _Body({
+    required this.job,
+    required this.submitting,
+    required this.onApply,
+  });
+  final Job job;
+  final bool submitting;
+  final void Function({bool priority}) onApply;
+
+  @override
+  Widget build(BuildContext context) {
+    final referral = (job.amount * 0.10).round();
+    return Column(
+      children: [
+        Expanded(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              const _MapPlaceholder(),
+              Container(
+                decoration: const BoxDecoration(
+                  color: AppColors.card,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+                ),
+                transform: Matrix4.translationValues(0, -20, 0),
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _statusPill(),
+                        Text(
+                          '일감번호 #${job.jobNo}',
+                          style: const TextStyle(
+                            fontSize: 11.5,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.ink3,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 9),
+                    Text(
+                      job.regionName,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.ink,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${job.address ?? job.regionName} · ${JobFormat.workDateLong(job.workDate)} 시작',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.ink2,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('일감 금액',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.ink3)),
+                            const SizedBox(height: 3),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(text: JobFormat.amount(job.amount)),
+                                  const TextSpan(
+                                      text: '원',
+                                      style: TextStyle(fontSize: 13)),
+                                ],
+                                style: const TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.navy,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            const Text('소개비(10%)',
+                                style: TextStyle(
+                                    fontSize: 11.5,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.ink2)),
+                            const SizedBox(height: 2),
+                            Text(
+                              '${JobFormat.amount(referral)}p 차감',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.red,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    if (job.jobTypeTags.isNotEmpty)
+                      _InfoRow(
+                          k: '작업 종류', v: job.jobTypeTags.join(' · ')),
+                    _InfoRow(k: '허용 장비', v: _equipmentLine(job)),
+                    if (job.paymentMethod != null)
+                      _InfoRow(k: '결제 방식', v: job.paymentMethod!),
+                    if ((job.description ?? '').isNotEmpty)
+                      _InfoRow(k: '작업 정보', v: job.description!),
+                    if ((job.memo ?? '').isNotEmpty)
+                      _InfoRow(k: '메모', v: job.memo!),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        _ActionBar(job: job, submitting: submitting, onApply: onApply),
+      ],
+    );
+  }
+
+  Widget _statusPill() {
+    late final String label;
+    late final Color bg;
+    late final Color fg;
+    switch (job.status) {
+      case JobStatus.priorityWindow:
+        label = '우선배차 진행 중';
+        bg = AppColors.red;
+        fg = Colors.white;
+      case JobStatus.designatedWindow:
+        label = '지정배차 진행 중';
+        bg = AppColors.navy;
+        fg = Colors.white;
+      case JobStatus.open:
+        label = '모집중';
+        bg = const Color(0xFFE4EDFF);
+        fg = AppColors.blueInk;
+      case JobStatus.matched:
+        label = '배차완료';
+        bg = AppColors.line;
+        fg = AppColors.ink2;
+      default:
+        label = '종료';
+        bg = AppColors.line;
+        fg = AppColors.ink2;
+    }
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration:
+          BoxDecoration(color: bg, borderRadius: BorderRadius.circular(999)),
+      child: Text(label,
+          style: TextStyle(
+              fontSize: 11.5, fontWeight: FontWeight.w800, color: fg)),
+    );
+  }
+
+  static String _equipmentLine(Job job) {
+    final parts = <String>[];
+    if (job.requiredCategory != null) {
+      parts.add(job.requiredModel == null
+          ? job.requiredCategory!
+          : '${job.requiredCategory} ${job.requiredModel} 이상');
+    }
+    for (final o in job.options) {
+      parts.add(o.minModel == null ? o.category : '${o.category} ${o.minModel} 이상');
+    }
+    if (parts.isEmpty) return '장비 무관';
+    final line = parts.join(' · ');
+    return parts.length > 1 ? '$line · 1대 매칭' : line;
+  }
+}
+
+class _ActionBar extends StatelessWidget {
+  const _ActionBar({
+    required this.job,
+    required this.submitting,
+    required this.onApply,
+  });
+  final Job job;
+  final bool submitting;
+  final void Function({bool priority}) onApply;
+
+  @override
+  Widget build(BuildContext context) {
+    final closed = job.status.isClosed;
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppColors.card,
+        border: Border(top: BorderSide(color: AppColors.line)),
+      ),
+      padding: EdgeInsets.fromLTRB(
+          16, 10, 16, 10 + MediaQuery.of(context).padding.bottom),
+      child: SafeArea(
+        top: false,
+        child: _buildButtons(context, closed),
+      ),
+    );
+  }
+
+  Widget _buildButtons(BuildContext context, bool closed) {
+    if (closed) {
+      return SizedBox(
+        height: 50,
+        width: double.infinity,
+        child: FilledButton(
+          onPressed: null,
+          style: FilledButton.styleFrom(
+            disabledBackgroundColor: AppColors.ink3,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(13)),
+          ),
+          child: const Text('마감된 일감입니다'),
+        ),
+      );
+    }
+
+    if (job.status == JobStatus.designatedWindow) {
+      return _bigButton(
+        label: '지정배차 지원',
+        color: AppColors.navy,
+        onTap: () => onApply(),
+      );
+    }
+
+    if (job.status == JobStatus.priorityWindow) {
+      return Row(
+        children: [
+          Expanded(
+            child: _bigButton(
+              label: '우선 지원',
+              color: AppColors.red,
+              onTap: () => onApply(priority: true),
+            ),
+          ),
+        ],
+      );
+    }
+
+    // open
+    return _bigButton(
+      label: '일반 지원',
+      color: AppColors.navy,
+      onTap: () => onApply(),
+    );
+  }
+
+  Widget _bigButton({
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return SizedBox(
+      height: 50,
+      width: double.infinity,
+      child: FilledButton(
+        onPressed: submitting ? null : onTap,
+        style: FilledButton.styleFrom(
+          backgroundColor: color,
+          disabledBackgroundColor: AppColors.ink3,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+        ),
+        child: submitting
+            ? const SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(
+                    strokeWidth: 2.4, color: Colors.white),
+              )
+            : Text(label,
+                style: const TextStyle(
+                    fontSize: 16, fontWeight: FontWeight.w700)),
+      ),
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  const _InfoRow({required this.k, required this.v});
+  final String k;
+  final String v;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 11),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 76,
+            child: Text(k,
+                style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.ink3)),
+          ),
+          Expanded(
+            child: Text(v,
+                style: const TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.ink)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MapPlaceholder extends StatelessWidget {
+  const _MapPlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 170,
+      color: const Color(0xFFE8ECF1),
+      child: Stack(
+        children: [
+          const Center(
+            child: Icon(Icons.place, size: 40, color: AppColors.navy),
+          ),
+          Positioned(
+            right: 12,
+            bottom: 12,
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.card,
+                borderRadius: BorderRadius.circular(7),
+              ),
+              child: const Text('지도(준비 중)',
+                  style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.ink2)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
