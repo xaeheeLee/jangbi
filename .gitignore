@@ -42,3 +42,4 @@ docs/KakaoTalk_20260609_102535107.mp4
 admin/node_modules/
 admin/dist/
 admin/.env
+admin/tsconfig.tsbuildinfo

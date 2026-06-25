@@ -6,6 +6,10 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Members from './pages/Members'
 import Withdrawals from './pages/Withdrawals'
+import Premium from './pages/Premium'
+import Ratings from './pages/Ratings'
+import Tax from './pages/Tax'
+import Jobs from './pages/Jobs'
 import Placeholder from './pages/Placeholder'
 
 export default function App() {
@@ -32,11 +36,11 @@ export default function App() {
         <Route path="members" element={<Members />} />
         <Route path="withdrawals" element={<Withdrawals />} />
         <Route path="documents" element={<Placeholder title="서류 마스킹" />} />
-        <Route path="premium" element={<Placeholder title="프리미엄 명단" />} />
-        <Route path="ratings" element={<Placeholder title="평점 관리" />} />
-        <Route path="jobs" element={<Placeholder title="일감·매칭" />} />
+        <Route path="premium" element={<Premium />} />
+        <Route path="ratings" element={<Ratings />} />
+        <Route path="jobs" element={<Jobs />} />
         <Route path="photos" element={<Placeholder title="현장 사진" />} />
-        <Route path="tax" element={<Placeholder title="세무 Export" />} />
+        <Route path="tax" element={<Tax />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
