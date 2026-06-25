@@ -17,6 +17,7 @@ const NAV: NavItem[] = [
   { to: '/jobs', label: '일감·매칭', ready: true },
   { to: '/photos', label: '현장 사진', ready: true },
   { to: '/tax', label: '세무 Export', ready: true },
+  { to: '/system', label: '시스템', ready: true },
 ]
 
 const TITLES: Record<string, string> = Object.fromEntries(NAV.map((n) => [n.to, n.label]))

@@ -12,6 +12,7 @@ import Tax from './pages/Tax'
 import Jobs from './pages/Jobs'
 import Documents from './pages/Documents'
 import Photos from './pages/Photos'
+import System from './pages/System'
 
 export default function App() {
   const { session, profile, loading } = useAuth()
@@ -42,6 +43,7 @@ export default function App() {
         <Route path="jobs" element={<Jobs />} />
         <Route path="photos" element={<Photos />} />
         <Route path="tax" element={<Tax />} />
+        <Route path="system" element={<System />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

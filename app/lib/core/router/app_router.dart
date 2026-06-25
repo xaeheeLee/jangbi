@@ -10,6 +10,8 @@ import '../../features/auth/splash_screen.dart';
 import '../../features/home/home_shell.dart';
 import '../../features/jobs/job_create_screen.dart';
 import '../../features/jobs/job_detail_screen.dart';
+import '../../features/notifications/notification_settings_screen.dart';
+import '../../features/notifications/notifications_screen.dart';
 import '../config/env.dart';
 
 /// 빌드 시 주입되는 프리뷰 진입 경로(개발용 스크린샷). 비어 있으면 정상 동작.
@@ -38,6 +40,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/job/:id',
         builder: (_, state) =>
             JobDetailScreen(jobId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/notifications',
+        builder: (_, _) => const NotificationsScreen(),
+        routes: [
+          GoRoute(
+            path: 'settings',
+            builder: (_, _) => const NotificationSettingsScreen(),
+          ),
+        ],
       ),
     ],
     redirect: (context, state) {

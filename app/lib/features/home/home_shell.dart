@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/widgets/app_bottom_nav.dart';
@@ -8,6 +9,7 @@ import '../auth/auth_providers.dart';
 import '../calendar/calendar_screen.dart';
 import '../dispatch/dispatch_screen.dart';
 import '../jobs/jobs_list_screen.dart';
+import '../notifications/notification_providers.dart';
 import '../profile/profile_screen.dart';
 import '../wallet/wallet_screen.dart';
 
@@ -65,7 +67,10 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         ),
         actions: showBell
             ? [
-                _NotificationButton(onTap: () {}),
+                _NotificationButton(
+                  hasUnread: ref.watch(unreadCountProvider) > 0,
+                  onTap: () => context.push('/notifications'),
+                ),
                 const SizedBox(width: 8),
               ]
             : null,
@@ -94,10 +99,11 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   }
 }
 
-/// 앱바 알림 버튼(.iconbtn): 38x38, 우상단 빨강 점(.dot).
+/// 앱바 알림 버튼(.iconbtn): 38x38. 미읽음 있으면 우상단 빨강 점(.dot).
 class _NotificationButton extends StatelessWidget {
-  const _NotificationButton({required this.onTap});
+  const _NotificationButton({required this.onTap, this.hasUnread = false});
   final VoidCallback onTap;
+  final bool hasUnread;
 
   @override
   Widget build(BuildContext context) {
@@ -111,19 +117,20 @@ class _NotificationButton extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             const Icon(Icons.notifications_none, size: 22, color: AppColors.ink),
-            Positioned(
-              top: 8,
-              right: 9,
-              child: Container(
-                width: 7,
-                height: 7,
-                decoration: BoxDecoration(
-                  color: AppColors.red,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.card, width: 1.5),
+            if (hasUnread)
+              Positioned(
+                top: 8,
+                right: 9,
+                child: Container(
+                  width: 7,
+                  height: 7,
+                  decoration: BoxDecoration(
+                    color: AppColors.red,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.card, width: 1.5),
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),

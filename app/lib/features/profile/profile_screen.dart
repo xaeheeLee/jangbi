@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_shadows.dart';
@@ -54,7 +55,7 @@ class ProfileScreen extends ConsumerWidget {
             _MenuItem(
               icon: Icons.notifications_none,
               label: '알림 설정',
-              onTap: () => _todo(context, '알림 설정'),
+              onTap: () => context.push('/notifications/settings'),
             ),
             _MenuItem(
               icon: Icons.article_outlined,
