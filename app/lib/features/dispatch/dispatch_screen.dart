@@ -122,9 +122,9 @@ class _TicketSummary extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFFEF1EC),
+        color: AppColors.redBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFFBD5C9)),
+        border: Border.all(color: AppColors.redBorder),
       ),
       child: Row(
         children: [

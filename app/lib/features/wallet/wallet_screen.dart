@@ -147,11 +147,12 @@ class _BalanceCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('보유 포인트',
+              Text('보유 포인트',
                   style: TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w700,
-                      color: Colors.white70)),
+                      // 정본 잔액 카드 라벨: rgba(255,255,255,.72).
+                      color: Colors.white.withValues(alpha: 0.72))),
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
@@ -171,8 +172,9 @@ class _BalanceCard extends StatelessWidget {
           Text.rich(
             TextSpan(children: [
               TextSpan(text: JobFormat.amount(balance)),
+              // 정본: <small>P</small> margin-left 3px (얇은 공백으로 표현).
               const TextSpan(
-                text: ' P',
+                text: ' P',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
             ]),
@@ -185,10 +187,11 @@ class _BalanceCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text('1P = 1원 · 매일 ${JobFormat.amount(dailyFee)}p 자동 차감',
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white60)),
+                  // 정본 잔액 카드 캡션: rgba(255,255,255,.66).
+                  color: Colors.white.withValues(alpha: 0.66))),
           const SizedBox(height: 16),
           Row(
             children: [

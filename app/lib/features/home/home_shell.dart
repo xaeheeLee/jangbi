@@ -5,6 +5,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/widgets/app_bottom_nav.dart';
 import '../../core/widgets/brand_logo.dart';
 import '../auth/auth_providers.dart';
+import '../calendar/calendar_screen.dart';
 import '../dispatch/dispatch_screen.dart';
 import '../jobs/jobs_list_screen.dart';
 import '../profile/profile_screen.dart';
@@ -37,12 +38,16 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     final suspended = ref.watch(membershipStatusProvider) == 'suspended';
     final tab = _tabs[_index];
     final isJobsTab = _index == 0;
+    final isCalendarTab = _index == 2;
+    // 캘린더 탭: 중앙 정렬 타이틀 + 알림 벨(목업 crop_calendar 기준).
+    final showBell = isJobsTab || isCalendarTab;
 
     return Scaffold(
       backgroundColor: AppColors.bg,
       appBar: AppBar(
         // 일감 탭: 소형 로고 + "일감". 그 외: 탭 라벨.
         titleSpacing: 16,
+        centerTitle: isCalendarTab,
         title: isJobsTab
             ? const Row(
                 mainAxisSize: MainAxisSize.min,
@@ -58,7 +63,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           preferredSize: Size.fromHeight(1),
           child: Divider(height: 1, thickness: 1, color: AppColors.line),
         ),
-        actions: isJobsTab
+        actions: showBell
             ? [
                 _NotificationButton(onTap: () {}),
                 const SizedBox(width: 8),
@@ -72,6 +77,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
             child: switch (_index) {
               0 => const JobsListScreen(),
               1 => const DispatchScreen(),
+              2 => const CalendarScreen(),
               3 => const WalletScreen(),
               4 => const ProfileScreen(),
               _ => _Placeholder(label: tab.label),

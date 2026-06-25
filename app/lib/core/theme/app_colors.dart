@@ -39,6 +39,7 @@ abstract final class AppColors {
   static const tagGrayFg = Color(0xFF475569); // .tag.gray 글자
   static const pillOpenBg = Color(0xFFE4EDFF); // .pill.open 배경
   static const redBg = Color(0xFFFEF1EC); // 우선배차 연한 빨강 박스(#FEF1EC)
+  static const redBorder = Color(0xFFFBD5C9); // 연빨강 박스 테두리(우선배차권 보상)
   static const countdownBg = Color(0xFFFEECEC); // .countdown 빨강 변형 배경
   static const countdownTrack = Color(0xFFFBE3D6); // 바 카운트다운 트랙
   static const ringTrack = Color(0xFFFBD5D5); // 링 카운트다운 잔여 트랙

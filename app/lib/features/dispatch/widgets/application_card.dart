@@ -71,7 +71,8 @@ class ApplicationCard extends StatelessWidget {
               ),
             ],
             const SizedBox(height: 10),
-            const Divider(height: 1, color: AppColors.line),
+            // 정본 일감 카드 패턴과 동일: 더 옅은 구분선(line-2).
+            const Divider(height: 1, color: AppColors.line2),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

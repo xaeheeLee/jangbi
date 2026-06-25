@@ -18,8 +18,8 @@ class PointTxTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final credit = tx.isCredit;
-    // 수령(+) okFg, 차감(-) red 포인트 색(목업 기준 — 토큰만 사용).
-    final amountColor = credit ? AppColors.okFg : AppColors.red;
+    // 정본: 수령(+) navy, 차감(-) red 포인트 색(토큰만 사용).
+    final amountColor = credit ? AppColors.navy : AppColors.red;
     final sign = credit ? '+' : '-';
     final abs = tx.amount.abs();
 
