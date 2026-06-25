@@ -37,3 +37,8 @@ supabase/.temp/
 # 대용량 회의 녹화 (GitHub 100MB 초과 — 로컬 보관)
 docs/KakaoTalk_20260609_102535107.mp4
 *.mp4
+
+# 관리자웹(React+Vite)
+admin/node_modules/
+admin/dist/
+admin/.env
