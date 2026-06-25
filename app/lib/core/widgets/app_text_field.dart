@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 
+// .input.filled: 배경 #F4F6F9, 보더 투명, radius 13.
+final _filledBorder = OutlineInputBorder(
+  borderRadius: BorderRadius.circular(AppTheme.inputRadius),
+  borderSide: BorderSide.none,
+);
+
 /// 라벨형 입력 필드 (목업 기준). 라벨 + height 50 + radius 13.
 class AppTextField extends StatelessWidget {
   const AppTextField({
@@ -16,6 +22,7 @@ class AppTextField extends StatelessWidget {
     this.validator,
     this.suffix,
     this.onSubmitted,
+    this.filled = false,
   });
 
   final String label;
@@ -27,6 +34,9 @@ class AppTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final Widget? suffix;
   final ValueChanged<String>? onSubmitted;
+
+  /// .input.filled: 배경 #F4F6F9, 보더 투명(로그인/폼 입력).
+  final bool filled;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +76,11 @@ class AppTextField extends StatelessWidget {
             constraints: const BoxConstraints(minHeight: AppTheme.inputHeight),
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
+            filled: filled ? true : null,
+            fillColor: filled ? const Color(0xFFF4F6F9) : null,
+            border: filled ? _filledBorder : null,
+            enabledBorder: filled ? _filledBorder : null,
+            focusedBorder: filled ? _filledBorder : null,
           ),
         ),
       ],

@@ -38,9 +38,14 @@ abstract final class AppColors {
   static const tagGrayBg = Color(0xFFEEF1F5); // .tag.gray 배경
   static const tagGrayFg = Color(0xFF475569); // .tag.gray 글자
   static const pillOpenBg = Color(0xFFE4EDFF); // .pill.open 배경
-  static const redBg = Color(0xFFFEF1EC); // 우선배차 연한 빨강 박스
+  static const redBg = Color(0xFFFEF1EC); // 우선배차 연한 빨강 박스(#FEF1EC)
+  static const countdownBg = Color(0xFFFEECEC); // .countdown 빨강 변형 배경
+  static const countdownTrack = Color(0xFFFBE3D6); // 바 카운트다운 트랙
+  static const ringTrack = Color(0xFFFBD5D5); // 링 카운트다운 잔여 트랙
   static const ghostBorder = Color(0xFFD7DEE8); // .btn-ghost border
   static const dashBorder = Color(0xFFCFD6E0); // .chip.add dashed border
+  static const mapBg = Color(0xFFE6EBEC); // .map 배경
+  static const heroLoginEnd = Color(0xFF01285A); // 로그인 히어로 60% 지점
 
   // 호환용 별칭 (기존 코드 참조 유지)
   static const surface = card;

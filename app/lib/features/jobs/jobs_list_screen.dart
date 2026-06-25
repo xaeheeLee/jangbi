@@ -24,7 +24,6 @@ class JobsListScreen extends ConsumerWidget {
       floatingActionButton: _AddFab(onTap: () => context.push('/job/create')),
       body: Column(
         children: [
-          _ListHead(count: jobsAsync.value?.length),
           _FilterChips(filter: filter, categories: categories),
           const SizedBox(height: 4),
           Expanded(
@@ -54,50 +53,6 @@ class JobsListScreen extends ConsumerWidget {
   }
 }
 
-class _ListHead extends StatelessWidget {
-  const _ListHead({this.count});
-  final int? count;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 2),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
-        children: [
-          const Text(
-            '전체 일감',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-              color: AppColors.ink,
-            ),
-          ),
-          const SizedBox(width: 7),
-          Text(
-            '${count ?? 0}건',
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-              color: AppColors.navy,
-            ),
-          ),
-          const Spacer(),
-          const Text(
-            '오늘',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: AppColors.ink3,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _FilterChips extends ConsumerWidget {
   const _FilterChips({required this.filter, required this.categories});
   final JobsFilter filter;
@@ -117,9 +72,11 @@ class _FilterChips extends ConsumerWidget {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.fromLTRB(16, 7, 16, 4),
         children: [
+          // 지역/전체 선택 칩(.chip.sel, 드롭다운 셰브런). 카테고리 null=전체.
           _Chip(
-            label: '전체',
+            label: '서울 전체',
             selected: filter.category == null,
+            trailingChevron: true,
             onTap: () => setCategory(null),
           ),
           for (final c in categories) ...[
@@ -130,43 +87,68 @@ class _FilterChips extends ConsumerWidget {
               onTap: () => setCategory(c.code),
             ),
           ],
+          const SizedBox(width: 7),
+          // +필터(.chip.add, 점선). 추가 필터 진입(추후) — 현재 시각 일관성용.
+          const _Chip(label: '+필터', dashed: true),
         ],
       ),
     );
   }
 }
 
+/// .chip 변형: sel(navy 채움) / out(흰+1.5px line) / add(점선 보더).
 class _Chip extends StatelessWidget {
-  const _Chip({required this.label, required this.selected, required this.onTap});
+  const _Chip({
+    required this.label,
+    this.selected = false,
+    this.dashed = false,
+    this.trailingChevron = false,
+    this.onTap,
+  });
   final String label;
   final bool selected;
-  final VoidCallback onTap;
+  final bool dashed;
+  final bool trailingChevron;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 34,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 13),
-        decoration: BoxDecoration(
-          color: selected ? AppColors.navy : AppColors.card,
-          borderRadius: BorderRadius.circular(999),
-          border: selected
-              ? null
-              : Border.all(color: AppColors.line, width: 1.5),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 12.5,
-            fontWeight: FontWeight.w700,
-            color: selected ? Colors.white : AppColors.ink,
+    final Color fg = dashed
+        ? AppColors.ink2
+        : (selected ? Colors.white : AppColors.ink);
+    final child = Container(
+      height: 34,
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 13),
+      decoration: BoxDecoration(
+        color: selected && !dashed ? AppColors.navy : AppColors.card,
+        borderRadius: BorderRadius.circular(999),
+        border: selected && !dashed
+            ? null
+            : Border.all(
+                color: dashed ? AppColors.dashBorder : AppColors.line,
+                width: 1.5,
+              ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w700,
+              color: fg,
+            ),
           ),
-        ),
+          if (trailingChevron) ...[
+            const SizedBox(width: 4),
+            Icon(Icons.keyboard_arrow_down, size: 15, color: fg),
+          ],
+        ],
       ),
     );
+    return onTap == null ? child : GestureDetector(onTap: onTap, child: child);
   }
 }
 

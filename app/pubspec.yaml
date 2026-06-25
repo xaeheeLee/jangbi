@@ -62,6 +62,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  # 브랜드 에셋(원형 엠블럼 로고). 로그인/앱바/스플래시에서 사용.
+  assets:
+    - assets/brand/
+
   # Pretendard (목업 디자인 토큰 폰트). Variable TTF 하나로 전 굵기 지원.
   fonts:
     - family: Pretendard

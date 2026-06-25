@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/widgets/app_bottom_nav.dart';
+import '../../core/widgets/brand_logo.dart';
 import '../auth/auth_providers.dart';
 import '../dispatch/dispatch_screen.dart';
 import '../jobs/jobs_list_screen.dart';
@@ -38,7 +39,31 @@ class _HomeShellState extends ConsumerState<HomeShell> {
 
     return Scaffold(
       backgroundColor: AppColors.bg,
-      appBar: AppBar(title: Text(isJobsTab ? '일감' : tab.label)),
+      appBar: AppBar(
+        // 일감 탭: 소형 로고 + "일감". 그 외: 탭 라벨.
+        titleSpacing: 16,
+        title: isJobsTab
+            ? const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  LogoMark(size: 25),
+                  SizedBox(width: 8),
+                  Text('일감'),
+                ],
+              )
+            : Text(tab.label),
+        // 하단 1px line 구분선(.appbar border-bottom).
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(height: 1, thickness: 1, color: AppColors.line),
+        ),
+        actions: isJobsTab
+            ? [
+                _NotificationButton(onTap: () {}),
+                const SizedBox(width: 8),
+              ]
+            : null,
+      ),
       body: Column(
         children: [
           if (suspended) const _SuspendedBanner(),
@@ -56,6 +81,43 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         items: _tabs,
         currentIndex: _index,
         onTap: (i) => setState(() => _index = i),
+      ),
+    );
+  }
+}
+
+/// 앱바 알림 버튼(.iconbtn): 38x38, 우상단 빨강 점(.dot).
+class _NotificationButton extends StatelessWidget {
+  const _NotificationButton({required this.onTap});
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: SizedBox(
+        width: 38,
+        height: 38,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            const Icon(Icons.notifications_none, size: 22, color: AppColors.ink),
+            Positioned(
+              top: 8,
+              right: 9,
+              child: Container(
+                width: 7,
+                height: 7,
+                decoration: BoxDecoration(
+                  color: AppColors.red,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.card, width: 1.5),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

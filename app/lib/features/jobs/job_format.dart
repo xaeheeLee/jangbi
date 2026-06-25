@@ -14,6 +14,27 @@ abstract final class JobFormat {
 
   /// 2026.06.05(목) 08:00.
   static String workDateLong(DateTime d) => _dateLong.format(d);
+
+  /// 장비 카테고리 코드 → 표시 라벨(정본 톤). DB는 track/tire/mini 코드.
+  /// 매핑 외 코드는 원문 그대로(서버 라벨 폴백).
+  static String categoryLabel(String code) {
+    switch (code) {
+      case 'track':
+        return '궤도형';
+      case 'tire':
+        return '바퀴형';
+      case 'mini':
+        return '미니굴삭기';
+      default:
+        return code;
+    }
+  }
+
+  /// "궤도형 · 06LC"(모델 있을 때) / "궤도형"(없을 때).
+  static String equipmentLabel(String category, String? model) {
+    final cat = categoryLabel(category);
+    return (model == null || model.isEmpty) ? cat : '$cat · $model';
+  }
 }
 
 /// RPC 에러 코드 → 사용자 메시지(계획서 §7.1). 미지정 코드는 원문 폴백.

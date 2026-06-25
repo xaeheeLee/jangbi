@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/config/env.dart';
 import '../../core/supabase/supabase_service.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_shadows.dart';
 import '../../core/widgets/primary_button.dart';
 import '../auth/auth_providers.dart';
 import 'job_format.dart';
@@ -28,7 +29,14 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
     final jobAsync = ref.watch(jobDetailProvider(widget.jobId));
     return Scaffold(
       backgroundColor: AppColors.bg,
-      appBar: AppBar(title: const Text('일감 상세')),
+      appBar: AppBar(
+        title: const Text('일감 상세'),
+        centerTitle: true,
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(height: 1, thickness: 1, color: AppColors.line),
+        ),
+      ),
       body: jobAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(
@@ -203,21 +211,12 @@ class _Body extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _statusPill(),
-                        Text(
-                          '일감번호 #${job.jobNo}',
-                          style: const TextStyle(
-                            fontSize: 11.5,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.ink3,
-                          ),
-                        ),
-                      ],
+                    // 상태 pill 단독(좌측 정렬).
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: _statusPill(),
                     ),
-                    const SizedBox(height: 9),
+                    const SizedBox(height: 11),
                     Text(
                       job.regionName,
                       style: const TextStyle(
@@ -228,7 +227,7 @@ class _Body extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${job.address ?? job.regionName} · ${JobFormat.workDateLong(job.workDate)} 시작',
+                      '${job.address ?? job.regionName} · ${JobFormat.workDate(job.workDate)} 시작',
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -287,11 +286,16 @@ class _Body extends StatelessWidget {
                         ),
                       ],
                     ),
+                    if (job.status == JobStatus.priorityWindow &&
+                        job.priorityWindowEndsAt != null) ...[
+                      const SizedBox(height: 15),
+                      _RingCountdown(endsAt: job.priorityWindowEndsAt!),
+                    ],
                     const SizedBox(height: 16),
                     if (job.jobTypeTags.isNotEmpty)
                       _InfoRow(
                           k: '작업 종류', v: job.jobTypeTags.join(' · ')),
-                    _InfoRow(k: '허용 장비', v: _equipmentLine(job)),
+                    _InfoRow(k: '장비 조건', v: _equipmentLine(job)),
                     if (job.paymentMethod != null)
                       _InfoRow(k: '결제 방식', v: job.paymentMethod!),
                     if ((job.description ?? '').isNotEmpty)
@@ -336,28 +340,25 @@ class _Body extends StatelessWidget {
         fg = AppColors.ink2;
     }
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
       decoration:
-          BoxDecoration(color: bg, borderRadius: BorderRadius.circular(999)),
+          BoxDecoration(color: bg, borderRadius: BorderRadius.circular(7)),
       child: Text(label,
           style: TextStyle(
-              fontSize: 11.5, fontWeight: FontWeight.w800, color: fg)),
+              fontSize: 11, fontWeight: FontWeight.w800, color: fg)),
     );
   }
 
   static String _equipmentLine(Job job) {
     final parts = <String>[];
     if (job.requiredCategory != null) {
-      parts.add(job.requiredModel == null
-          ? job.requiredCategory!
-          : '${job.requiredCategory} ${job.requiredModel} 이상');
+      parts.add(JobFormat.equipmentLabel(job.requiredCategory!, job.requiredModel));
     }
     for (final o in job.options) {
-      parts.add(o.minModel == null ? o.category : '${o.category} ${o.minModel} 이상');
+      parts.add(JobFormat.equipmentLabel(o.category, o.minModel));
     }
     if (parts.isEmpty) return '장비 무관';
-    final line = parts.join(' · ');
-    return parts.length > 1 ? '$line · 1대 매칭' : line;
+    return parts.join(' · ');
   }
 }
 
@@ -439,6 +440,130 @@ class _ActionBar extends StatelessWidget {
   }
 }
 
+/// 상세 링 카운트다운(.ring): 38px 원형, red 잔여비율 호 + #FBD5D5 트랙,
+/// 가운데 숫자. 옆에 "우선배차 진행 중 / 배차권 보유자 우선 지원 가능".
+/// #FEF1EC 박스(radius 14).
+class _RingCountdown extends StatefulWidget {
+  const _RingCountdown({required this.endsAt});
+  final DateTime endsAt;
+
+  @override
+  State<_RingCountdown> createState() => _RingCountdownState();
+}
+
+class _RingCountdownState extends State<_RingCountdown> {
+  late final Stream<void> _ticker;
+
+  @override
+  void initState() {
+    super.initState();
+    _ticker = Stream.periodic(const Duration(seconds: 1));
+  }
+
+  int get _secs {
+    final d = widget.endsAt.difference(DateTime.now());
+    return d.isNegative ? 0 : d.inSeconds;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<void>(
+      stream: _ticker,
+      builder: (context, _) {
+        final secs = _secs;
+        final ratio = (secs / 30).clamp(0.0, 1.0);
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            color: AppColors.redBg,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 38,
+                height: 38,
+                child: CustomPaint(
+                  painter: _RingPainter(ratio),
+                  child: Center(
+                    child: Text(
+                      '$secs',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.red,
+                        fontFeatures: [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '우선배차 진행 중',
+                      style: TextStyle(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.ink,
+                      ),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      '배차권 보유자 우선 지원 가능',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.ink2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _RingPainter extends CustomPainter {
+  const _RingPainter(this.ratio);
+  final double ratio;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width / 2 - 2;
+    final track = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4
+      ..color = AppColors.ringTrack;
+    final arc = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4
+      ..strokeCap = StrokeCap.round
+      ..color = AppColors.red;
+    canvas.drawCircle(center, radius, track);
+    const start = -1.5707963; // -90deg (12시)
+    final sweep = 6.2831853 * ratio;
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      start,
+      sweep,
+      false,
+      arc,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_RingPainter old) => old.ratio != ratio;
+}
+
 class _InfoRow extends StatelessWidget {
   const _InfoRow({required this.k, required this.v});
   final String k;
@@ -481,32 +606,96 @@ class _MapPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // .map placeholder: 회녹색 배경 + 블록/도로 + 핀 + "카카오맵" 칩.
     return Container(
-      height: 170,
-      color: const Color(0xFFE8ECF1),
+      height: 188,
+      color: AppColors.mapBg,
       child: Stack(
         children: [
-          const Center(
-            child: Icon(Icons.place, size: 40, color: AppColors.navy),
+          // 가짜 지형 블록.
+          Positioned(left: -12, top: 14, child: _block(92, 58, const Color(0xFFDDE7DC))),
+          Positioned(right: 16, top: 8, child: _block(78, 50, const Color(0xFFE6E3D9))),
+          Positioned(left: 34, bottom: 12, child: _block(72, 46, const Color(0xFFE6E3D9))),
+          Positioned(right: -10, bottom: 20, child: _block(94, 60, const Color(0xFFDDE7DC))),
+          // 도로.
+          Positioned(left: 0, right: 0, top: 86, child: Container(height: 13, color: Colors.white)),
+          Positioned(top: 0, bottom: 0, left: 124, child: Container(width: 12, color: Colors.white)),
+          // 핀(티어드롭).
+          const Align(
+            alignment: Alignment(0, -0.1),
+            child: _MapPin(),
           ),
           Positioned(
-            right: 12,
+            left: 12,
             bottom: 12,
             child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
               decoration: BoxDecoration(
-                color: AppColors.card,
+                color: Colors.white.withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(7),
+                boxShadow: AppShadows.sm,
               ),
-              child: const Text('지도(준비 중)',
+              child: const Text('카카오맵',
                   style: TextStyle(
-                      fontSize: 11,
+                      fontSize: 10.5,
                       fontWeight: FontWeight.w700,
                       color: AppColors.ink2)),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _block(double w, double h, Color c) => Container(
+        width: w,
+        height: h,
+        decoration: BoxDecoration(
+          color: c,
+          borderRadius: BorderRadius.circular(3),
+        ),
+      );
+}
+
+/// 지도 핀(.pin): 회청 티어드롭 + 흰 점.
+class _MapPin extends StatelessWidget {
+  const _MapPin();
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform.rotate(
+      angle: 0.785398, // 45deg
+      child: Container(
+        width: 30,
+        height: 30,
+        decoration: const BoxDecoration(
+          color: Color(0xFF3B4456),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15),
+            topRight: Radius.circular(15),
+            bottomLeft: Radius.circular(15),
+            bottomRight: Radius.circular(4),
+          ),
+          boxShadow: [
+            BoxShadow(
+                color: Color(0x47000000),
+                blurRadius: 12,
+                offset: Offset(0, 6)),
+          ],
+        ),
+        child: Center(
+          child: Transform.rotate(
+            angle: -0.785398,
+            child: Container(
+              width: 11,
+              height: 11,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

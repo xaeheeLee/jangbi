@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_shadows.dart';
 import '../job_format.dart';
 import '../job_models.dart';
 
@@ -21,18 +22,25 @@ class JobCard extends StatelessWidget {
 
     Color borderColor;
     double borderWidth;
+    List<BoxShadow> shadow;
     if (isClosed) {
       borderColor = AppColors.line;
       borderWidth = 1;
+      shadow = const [];
     } else if (isPriority) {
+      // 우선배차: 1.6px red 테두리 + 빨강 글로우.
       borderColor = AppColors.red;
       borderWidth = 1.6;
+      shadow = AppShadows.prioGlow;
     } else if (isDesignatedWindow || job.isDesignated) {
       borderColor = AppColors.navy;
       borderWidth = 1.6;
+      shadow = AppShadows.sm;
     } else {
+      // 모집중: 1px line + shadow-sm.
       borderColor = AppColors.line;
       borderWidth = 1;
+      shadow = AppShadows.sm;
     }
 
     final card = Container(
@@ -40,6 +48,7 @@ class JobCard extends StatelessWidget {
         color: AppColors.card,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: borderColor, width: borderWidth),
+        boxShadow: shadow,
       ),
       padding: const EdgeInsets.all(13),
       child: Column(
@@ -79,9 +88,9 @@ class JobCard extends StatelessWidget {
             ),
           ],
           if (!isClosed) ...[
-            const SizedBox(height: 10),
-            const Divider(height: 1, color: AppColors.line),
-            const SizedBox(height: 10),
+            const SizedBox(height: 13),
+            const Divider(height: 1, color: AppColors.line2),
+            const SizedBox(height: 13),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -125,23 +134,24 @@ class JobCard extends StatelessWidget {
           child: IgnorePointer(
             child: Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(
                   color: AppColors.card,
                   borderRadius: BorderRadius.circular(999),
-                  border: Border.all(color: AppColors.line),
+                  boxShadow: AppShadows.card,
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.check_circle, size: 16, color: AppColors.ink2),
-                    const SizedBox(width: 5),
+                    const Icon(Icons.check_circle_outline,
+                        size: 18, color: Color(0xFF64748B)),
+                    const SizedBox(width: 8),
                     Text(
                       _closedLabel(job.status),
                       style: const TextStyle(
-                        fontSize: 12.5,
+                        fontSize: 13,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.ink2,
+                        color: Color(0xFF475569),
                       ),
                     ),
                   ],
@@ -168,7 +178,7 @@ class JobCard extends StatelessWidget {
   }
 
   static String _eqLabel(String category, String? model) =>
-      model == null ? category : '$category $model 이상';
+      JobFormat.equipmentLabel(category, model);
 
   static String _closedLabel(JobStatus s) {
     switch (s) {
@@ -311,43 +321,64 @@ class _CountdownBarState extends State<_CountdownBar> {
         final secs = _remaining.inSeconds;
         // 30초 윈도우 가정의 진행률(0~1). app_settings 기본 30초.
         final ratio = (secs / 30).clamp(0.0, 1.0);
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  '우선배차 마감까지',
-                  style: TextStyle(
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.orange,
+        // .countdown: #FEF1EC 박스 + 시계 아이콘 + 라벨 + 잔여초(인라인).
+        // 아래 트랙(#FBE3D6) + orange→red 그라데이션 채움 바.
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+          decoration: BoxDecoration(
+            color: AppColors.redBg,
+            borderRadius: BorderRadius.circular(11),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.schedule, size: 13, color: AppColors.orange),
+                  const SizedBox(width: 6),
+                  const Text(
+                    '우선배차 마감까지',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.orange,
+                    ),
                   ),
-                ),
-                Text(
-                  '$secs초',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.orange,
-                    fontFeatures: [FontFeature.tabularFigures()],
+                  const SizedBox(width: 5),
+                  Text(
+                    '$secs초',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.orange,
+                      fontFeatures: [FontFeature.tabularFigures()],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(6),
-              child: LinearProgressIndicator(
-                value: ratio,
-                minHeight: 6,
-                backgroundColor: const Color(0xFFFBE3D6),
-                valueColor:
-                    const AlwaysStoppedAnimation<Color>(AppColors.orange),
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: 8),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: Stack(
+                  children: [
+                    Container(height: 6, color: AppColors.countdownTrack),
+                    FractionallySizedBox(
+                      widthFactor: ratio,
+                      child: Container(
+                        height: 6,
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [AppColors.orange, AppColors.red],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         );
       },
     );

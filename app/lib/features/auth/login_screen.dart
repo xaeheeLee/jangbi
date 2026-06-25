@@ -3,9 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_shadows.dart';
-import '../../core/theme/app_theme.dart';
 import '../../core/widgets/app_text_field.dart';
+import '../../core/widgets/brand_logo.dart';
 import '../../core/widgets/primary_button.dart';
 import 'auth_controller.dart';
 
@@ -56,20 +55,39 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final loading = ref.watch(authControllerProvider).isLoading;
 
     return Scaffold(
-      backgroundColor: AppColors.bg,
-      body: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _header(context),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
-                child: _card(loading),
-              ),
-              _trustChips(),
-              const SizedBox(height: 20),
-            ],
+      // 히어로(네이비)가 화면 전체를 채우고, 흰 시트가 아래에서 올라오는 구조.
+      backgroundColor: AppColors.navy,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          // .hero-navy: linear-gradient(170deg, navy 0%, #01285A 60%, #01224d 100%)
+          gradient: LinearGradient(
+            begin: Alignment(-0.17, -1),
+            end: Alignment(0.17, 1),
+            colors: [AppColors.navy, AppColors.heroLoginEnd, AppColors.heroEnd],
+            stops: [0.0, 0.6, 1.0],
+          ),
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      children: [
+                        // 히어로는 남는 공간을 채워 시트를 화면 하단으로 민다.
+                        Expanded(child: _header(context)),
+                        _sheet(context, loading),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -77,54 +95,43 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget _header(BuildContext context) {
-    final topPad = MediaQuery.of(context).padding.top;
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.fromLTRB(24, topPad + 52, 24, 44),
-      decoration: const BoxDecoration(
-        // .hero-navy: linear-gradient(170deg, navy 0%, #01285A 60%, #01224d 100%)
-        // 아래로 갈수록 더 진한 네이비. 170deg ≈ 위→아래(살짝 좌측).
-        gradient: LinearGradient(
-          begin: Alignment(-0.17, -1),
-          end: Alignment(0.17, 1),
-          colors: [AppColors.navy, AppColors.heroMid, AppColors.heroEnd],
-          stops: [0.0, 0.6, 1.0],
-        ),
-      ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(28, 46, 28, 36),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // .logo-badge: 92x92, radius 26, 흰배경 + logo-badge 그림자 + inset white.
-          Container(
-            width: 92,
-            height: 92,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(26),
-              boxShadow: AppShadows.logoBadge,
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.6),
-                width: 1,
-              ),
-            ),
-            child: const Icon(Icons.construction, color: AppColors.navy, size: 44),
-          ),
-          const SizedBox(height: 20),
+          // .logo-badge: 132x132, radius 30, 흰배경 + 그림자 + inset white.
+          const LogoBadge(size: 132, radius: 30),
+          const SizedBox(height: 22),
+          // 워드마크 2줄(26/400 + 26/700, 자간 타이트).
           const Text(
-            '전국중장비배차연합',
+            '전국 중장비',
+            textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w800,
-              letterSpacing: -0.48,
+              fontSize: 26,
+              fontWeight: FontWeight.w400,
+              height: 1.26,
+              letterSpacing: -1.17, // -.045em
             ),
           ),
-          const SizedBox(height: 7),
-          Text(
-            '믿을 수 있는 기사 간 배차 매칭',
+          const Text(
+            '배차의 시작',
+            textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.82),
-              fontSize: 13.5,
+              color: Colors.white,
+              fontSize: 26,
+              fontWeight: FontWeight.w700,
+              height: 1.26,
+              letterSpacing: -1.17,
+            ),
+          ),
+          const SizedBox(height: 11),
+          Text(
+            '믿을 수 있는 기사와 일감을 한 번에.',
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.72),
+              fontSize: 13,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -133,14 +140,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  Widget _card(bool loading) {
+  /// 아래에서 올라오는 흰 시트(.sheet: 상단 radius 26).
+  Widget _sheet(BuildContext context, bool loading) {
+    final bottomPad = MediaQuery.of(context).padding.bottom;
     return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
+      width: double.infinity,
+      decoration: const BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(AppTheme.rLg),
-        boxShadow: AppShadows.card,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(26)),
+        boxShadow: [
+          BoxShadow(color: Color(0x1F000000), blurRadius: 30, offset: Offset(0, -10)),
+        ],
       ),
+      padding: EdgeInsets.fromLTRB(24, 26, 24, 22 + bottomPad),
       child: Form(
         key: _formKey,
         child: Column(
@@ -149,7 +161,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             AppTextField(
               label: '휴대폰 번호',
               controller: _phoneCtrl,
-              hintText: '01012345678',
+              hintText: '010-0000-0000',
+              filled: true,
               keyboardType: TextInputType.phone,
               textInputAction: TextInputAction.next,
               validator: (v) {
@@ -163,6 +176,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               label: '비밀번호',
               controller: _pwCtrl,
               obscureText: _obscure,
+              filled: true,
               textInputAction: TextInputAction.done,
               onSubmitted: (_) => _submit(),
               validator: (v) =>
@@ -184,47 +198,54 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   onChanged: (v) => setState(() => _autoLogin = v),
                 ),
                 const Spacer(),
-                TextButton(
-                  onPressed: _onForgotPassword,
+                GestureDetector(
+                  onTap: _onForgotPassword,
                   child: const Text(
                     '비밀번호 찾기',
                     style: TextStyle(
-                      color: AppColors.ink2,
-                      fontWeight: FontWeight.w600,
+                      color: AppColors.blueInk,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 20),
             PrimaryButton(
               label: '로그인',
               loading: loading,
               onPressed: _submit,
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             Center(
               child: Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   const Text(
                     '전중배가 처음이세요? ',
-                    style: TextStyle(color: AppColors.ink2, fontSize: 14),
+                    style: TextStyle(
+                      color: AppColors.ink2,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   GestureDetector(
                     onTap: () => context.push('/signup'),
                     child: const Text(
                       '회원가입',
                       style: TextStyle(
-                        color: AppColors.navy,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 14,
+                        color: AppColors.blueInk,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
+            const SizedBox(height: 18),
+            _trustChips(),
           ],
         ),
       ),
@@ -238,17 +259,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
+  // 하단 신뢰배지 3종(자격 검증·빠른 배차·안전 거래). 상단 line-2 구분선 위 인라인.
   Widget _trustChips() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.only(top: 16),
+      decoration: const BoxDecoration(
+        border: Border(top: BorderSide(color: AppColors.line2)),
+      ),
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _TrustChip(emoji: '⚔', label: '빠른'),
-          SizedBox(width: 10),
-          _TrustChip(emoji: '🕐', label: '배차'),
-          SizedBox(width: 10),
-          _TrustChip(emoji: '✓', label: '안전'),
+          _TrustChip(icon: Icons.verified_user_outlined, label: '자격 검증'),
+          SizedBox(width: 18),
+          _TrustChip(icon: Icons.schedule, label: '빠른 배차'),
+          SizedBox(width: 18),
+          _TrustChip(icon: Icons.check_circle_outline, label: '안전 거래'),
         ],
       ),
     );
@@ -293,35 +319,28 @@ class _AutoLoginCheck extends StatelessWidget {
 }
 
 class _TrustChip extends StatelessWidget {
-  const _TrustChip({required this.emoji, required this.label});
+  const _TrustChip({required this.icon, required this.label});
 
-  final String emoji;
+  final IconData icon;
   final String label;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppColors.line),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(emoji, style: const TextStyle(fontSize: 13)),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: const TextStyle(
-              color: AppColors.ink2,
-              fontWeight: FontWeight.w700,
-              fontSize: 13,
-            ),
+    // .spec: 인라인 아이콘(navy 15px) + 라벨(12.5/600 ink-2).
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 15, color: AppColors.navy),
+        const SizedBox(width: 5),
+        Text(
+          label,
+          style: const TextStyle(
+            color: AppColors.ink2,
+            fontWeight: FontWeight.w600,
+            fontSize: 12.5,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

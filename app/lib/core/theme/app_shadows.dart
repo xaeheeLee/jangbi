@@ -67,6 +67,15 @@ abstract final class AppShadows {
     ),
   ];
 
+  /// 우선배차 카드 빨강 글로우: 0 12px 24px rgba(220,38,38,.10)
+  static const prioGlow = <BoxShadow>[
+    BoxShadow(
+      color: Color(0x1ADC2626), // rgba(220,38,38,.10)
+      blurRadius: 24,
+      offset: Offset(0, 12),
+    ),
+  ];
+
   /// 떠있는 탭바: 0 14px 34px rgba(16,24,40,.16)
   static const floatTab = <BoxShadow>[
     BoxShadow(
