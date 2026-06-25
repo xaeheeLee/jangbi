@@ -18,7 +18,8 @@ class HomeShell extends ConsumerStatefulWidget {
 }
 
 class _HomeShellState extends ConsumerState<HomeShell> {
-  int _index = 0;
+  // PREVIEW_TAB: 개발용 초기 탭 주입(스크린샷). 기본 0(일감).
+  int _index = const int.fromEnvironment('PREVIEW_TAB');
 
   static const _tabs = <_TabDef>[
     _TabDef('일감', Icons.work_outline, Icons.work),
