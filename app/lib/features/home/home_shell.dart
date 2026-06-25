@@ -6,6 +6,7 @@ import '../../core/theme/app_theme.dart';
 import '../auth/auth_providers.dart';
 import '../dispatch/dispatch_screen.dart';
 import '../jobs/jobs_list_screen.dart';
+import '../wallet/wallet_screen.dart';
 
 /// 하단 5탭 셸. 일감 / 배차 / 캘린더 / 지갑 / MY.
 /// 각 탭 본문은 P2 이후 구현 — 현재는 placeholder.
@@ -44,6 +45,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
             child: switch (_index) {
               0 => const JobsListScreen(),
               1 => const DispatchScreen(),
+              3 => const WalletScreen(),
               _ => _Placeholder(label: tab.label),
             },
           ),
