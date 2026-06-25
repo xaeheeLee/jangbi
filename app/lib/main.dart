@@ -5,12 +5,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app.dart';
 import 'core/config/env.dart';
-import 'core/supabase/supabase_service.dart';
-
-// 개발용 자동 로그인(스크린샷/프리뷰 전용). 비어 있으면 비활성.
-// 예: --dart-define=DEV_AUTOLOGIN_PHONE=01099990001 --dart-define=DEV_AUTOLOGIN_PW=...
-const _devPhone = String.fromEnvironment('DEV_AUTOLOGIN_PHONE');
-const _devPw = String.fromEnvironment('DEV_AUTOLOGIN_PW');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,18 +19,6 @@ Future<void> main() async {
       url: Env.supabaseUrl,
       publishableKey: Env.supabasePublishableKey,
     );
-
-    // 개발용 자동 로그인 (정의된 경우에만).
-    if (_devPhone.isNotEmpty && _devPw.isNotEmpty) {
-      try {
-        await SupabaseService.client.auth.signInWithPassword(
-          email: SupabaseService.phoneToEmail(_devPhone),
-          password: _devPw,
-        );
-      } catch (_) {
-        // 실패해도 일반 로그인 플로우로 진행.
-      }
-    }
   }
 
   runApp(const ProviderScope(child: JangbinaraApp()));

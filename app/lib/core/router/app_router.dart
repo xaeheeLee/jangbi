@@ -14,17 +14,13 @@ import '../../features/notifications/notification_settings_screen.dart';
 import '../../features/notifications/notifications_screen.dart';
 import '../config/env.dart';
 
-/// 빌드 시 주입되는 프리뷰 진입 경로(개발용 스크린샷). 비어 있으면 정상 동작.
-/// 예: flutter run --dart-define=PREVIEW_ROUTE=/signup
-const _previewRoute = String.fromEnvironment('PREVIEW_ROUTE');
-
 /// 앱 라우터. go_router + redirect 로 인증/승인 상태에 따라 분기한다.
 final routerProvider = Provider<GoRouter>((ref) {
   final refresh = _RouterRefresh(ref);
   ref.onDispose(refresh.dispose);
 
   return GoRouter(
-    initialLocation: _previewRoute.isNotEmpty ? _previewRoute : '/home',
+    initialLocation: '/home',
     refreshListenable: refresh,
     routes: [
       GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
@@ -53,8 +49,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
     ],
     redirect: (context, state) {
-      // 프리뷰 모드: 리다이렉트 우회(개발용 스크린샷).
-      if (_previewRoute.isNotEmpty) return null;
       // Supabase 미설정이면 골격 확인을 위해 home 진입 허용.
       if (!Env.isSupabaseConfigured) {
         return state.matchedLocation == '/home' ? null : '/home';
