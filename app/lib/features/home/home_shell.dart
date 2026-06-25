@@ -7,6 +7,7 @@ import '../../core/widgets/brand_logo.dart';
 import '../auth/auth_providers.dart';
 import '../dispatch/dispatch_screen.dart';
 import '../jobs/jobs_list_screen.dart';
+import '../profile/profile_screen.dart';
 import '../wallet/wallet_screen.dart';
 
 /// 하단 5탭 셸. 일감 / 배차 / 캘린더 / 지갑 / MY.
@@ -72,6 +73,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
               0 => const JobsListScreen(),
               1 => const DispatchScreen(),
               3 => const WalletScreen(),
+              4 => const ProfileScreen(),
               _ => _Placeholder(label: tab.label),
             },
           ),

@@ -78,11 +78,12 @@ class WalletScreen extends ConsumerWidget {
                   text: '아직 포인트 거래 내역이 없습니다.\n충전하면 여기에서 이력을 볼 수 있어요.',
                 );
               }
+              // 정본 ⑬ 원장 카드: 흰카드 radius 18 + shadow-sm + 패딩 4·14.
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
+                padding: const EdgeInsets.fromLTRB(14, 4, 14, 4),
                 decoration: BoxDecoration(
                   color: AppColors.card,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(18),
                   border: Border.all(color: AppColors.line),
                   boxShadow: AppShadows.sm,
                 ),
@@ -178,7 +179,7 @@ class _BalanceCard extends StatelessWidget {
             style: const TextStyle(
                 fontSize: 33,
                 fontWeight: FontWeight.w800,
-                letterSpacing: -0.5,
+                letterSpacing: -0.825, // -.025em (정본 잔액 카드)
                 color: Colors.white,
                 fontFeatures: [FontFeature.tabularFigures()]),
           ),
@@ -311,10 +312,10 @@ class _WithdrawalList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
+      padding: const EdgeInsets.fromLTRB(14, 4, 14, 4),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
         border: Border.all(color: AppColors.line),
         boxShadow: AppShadows.sm,
       ),
@@ -327,7 +328,7 @@ class _WithdrawalList extends StatelessWidget {
                 border: i == items.length - 1
                     ? null
                     : const Border(
-                        bottom: BorderSide(color: AppColors.line)),
+                        bottom: BorderSide(color: AppColors.line2)),
               ),
               child: Row(
                 children: [

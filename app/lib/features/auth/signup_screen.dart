@@ -215,23 +215,27 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           ],
         ),
         const SizedBox(height: 10),
+        // 정본 .infonote: 연블루 박스 + shield 아이콘(blue-ink) + 본문 ink-2.
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(13),
           decoration: BoxDecoration(
             color: AppColors.primaryBg,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(13),
           ),
           child: const Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.shield_outlined, color: AppColors.blueInk, size: 18),
+              Icon(Icons.verified_user_outlined,
+                  color: AppColors.blueInk, size: 17),
               SizedBox(width: 8),
               Expanded(
                 child: Text(
                   '발주자에게는 마스킹본만 노출, 원본은 비공개로 보관됩니다.',
                   style: TextStyle(
-                    fontSize: 12.5,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.blueInk,
+                    color: AppColors.ink2,
+                    height: 1.45,
                   ),
                 ),
               ),

@@ -28,12 +28,13 @@ class PointTxTile extends StatelessWidget {
       if (tx.memo != null && tx.memo!.isNotEmpty) tx.memo!,
     ].join(' · ');
 
+    // 정본 ⑬: 행 구분선은 line-2(더 옅은 구분선), 행 패딩 11px·좌우 2px.
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 2),
       decoration: BoxDecoration(
         border: last
             ? null
-            : const Border(bottom: BorderSide(color: AppColors.line)),
+            : const Border(bottom: BorderSide(color: AppColors.line2)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
