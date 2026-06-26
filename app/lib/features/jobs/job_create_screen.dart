@@ -329,15 +329,9 @@ class _JobCreateScreenState extends ConsumerState<JobCreateScreen> {
         'is_designated': _designated,
         if (_designated && designateTargetId != null)
           'designate_target_id': designateTargetId,
-        // ⚠ designate_password 는 pgcrypto crypt() 해시로만 저장해야 한다(스키마 주석).
-        //   apply_designated 가 crypt(p_password, designate_password) 로 검증하므로
-        //   평문 INSERT 는 매칭을 깨뜨린다 → 발주 SECURITY DEFINER RPC 도입 시 해시 처리.
-        //   현재 클라이언트는 회원번호 지정만 보낸다(비번 지정은 RPC 후속 작업).
+        // designate_password 는 평문 INSERT 금지(pgcrypto crypt 해시). 등록 직후
+        // set_job_designate_password RPC 로 해시 저장한다(아래).
       };
-      // 비번 입력 시 회원번호 지정이 없으면 미지원 안내(평문 저장 금지 스텁).
-      if (_designated && pw.isNotEmpty && designateTargetId == null) {
-        throw Exception('비밀번호 지정은 준비 중입니다. 회원번호로 지정해 주세요.');
-      }
 
       final created = await client
           .from('jobs')
@@ -353,6 +347,14 @@ class _JobCreateScreenState extends ConsumerState<JobCreateScreen> {
           for (final e in extra)
             {'job_id': jobId, 'category': e.category, 'min_model': e.model},
         ]);
+      }
+
+      // 지정 비밀번호: 평문 저장 금지 → SECURITY DEFINER RPC 가 crypt 해시로 저장.
+      if (_designated && pw.isNotEmpty) {
+        await client.rpc('set_job_designate_password', params: {
+          'p_job_id': jobId,
+          'p_password': pw,
+        });
       }
 
       if (!mounted) return;
