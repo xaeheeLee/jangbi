@@ -45,7 +45,12 @@ Future<void> main() async {
   // 카카오맵 JavaScript 키가 주입된 경우에만 초기화(싱글톤).
   // 키가 없으면 지도는 placeholder 로 대체되므로 초기화하지 않는다.
   if (Env.hasKakaoKey) {
-    AuthRepository.initialize(appKey: Env.kakaoJsKey);
+    // baseUrl 을 고정하면 지도 WebView 의 origin 이 http://localhost 로 일정해져,
+    // 카카오 콘솔 Web 플랫폼에 http://localhost 하나만 등록하면 지도가 로드된다.
+    AuthRepository.initialize(
+      appKey: Env.kakaoJsKey,
+      baseUrl: 'http://localhost',
+    );
   }
 
   // Supabase 미설정 상태에서도 골격이 실행되도록 가드.
