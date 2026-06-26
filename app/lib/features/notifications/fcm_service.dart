@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/config/env.dart';
 import '../../core/supabase/supabase_service.dart';
 import '../auth/auth_providers.dart';
+import 'local_notifications.dart';
 import 'notification_providers.dart';
 
 /// FCM 클라이언트 연동 서비스.
@@ -43,8 +44,13 @@ class FcmService {
         // 알림 권한 요청(Android 13+/iOS).
         await _messaging.requestPermission();
 
-        // foreground 메시지 → 인앱 알림센터 즉시 새로고침.
-        _onMessageSub = FirebaseMessaging.onMessage.listen((_) {
+        // 로컬 알림 플러그인 초기화 + 채널 생성(트레이 표시용).
+        await LocalNotifications.ensureInitialized();
+
+        // foreground 메시지 → 트레이 알림 표시 + 인앱 알림센터 즉시 새로고침.
+        // (foreground/data 메시지는 OS 가 자동 표시하지 않으므로 직접 show)
+        _onMessageSub = FirebaseMessaging.onMessage.listen((message) {
+          unawaited(LocalNotifications.showFromMessage(message));
           _ref.invalidate(notificationsProvider);
         });
 

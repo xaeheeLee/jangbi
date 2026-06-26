@@ -8,6 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app.dart';
 import 'core/config/env.dart';
+import 'features/notifications/local_notifications.dart';
 import 'firebase_options.dart';
 
 /// 백그라운드/종료 상태에서 도착한 FCM 데이터 메시지 핸들러.
@@ -15,7 +16,11 @@ import 'firebase_options.dart';
 /// 시스템 트레이 표시는 OS 가 처리하며, 여기서는 추가 동기화가 필요할 때 사용.
 @pragma('vm:entry-point')
 Future<void> _fcmBgHandler(RemoteMessage message) async {
-  // 현재는 별도 처리 없음(알림은 DB + 인앱센터로 노출). 향후 silent sync 용 훅.
+  // notification payload 가 있으면 OS 가 manifest 의 기본 채널로 자동 표시하므로
+  // 여기서 또 show() 하면 중복된다 → data-only 메시지일 때만 직접 표시.
+  if (message.notification == null && message.data.isNotEmpty) {
+    await LocalNotifications.showFromMessage(message);
+  }
 }
 
 Future<void> main() async {
