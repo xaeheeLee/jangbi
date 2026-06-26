@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app.dart';
@@ -39,6 +40,12 @@ Future<void> main() async {
     } catch (e) {
       debugPrint('Firebase init skipped: $e');
     }
+  }
+
+  // 카카오맵 JavaScript 키가 주입된 경우에만 초기화(싱글톤).
+  // 키가 없으면 지도는 placeholder 로 대체되므로 초기화하지 않는다.
+  if (Env.hasKakaoKey) {
+    AuthRepository.initialize(appKey: Env.kakaoJsKey);
   }
 
   // Supabase 미설정 상태에서도 골격이 실행되도록 가드.

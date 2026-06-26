@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/config/env.dart';
 import '../../core/supabase/supabase_service.dart';
 import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_shadows.dart';
 import '../../core/widgets/primary_button.dart';
 import '../auth/auth_providers.dart';
 import 'job_format.dart';
 import 'job_models.dart';
 import 'job_providers.dart';
+import 'widgets/job_map.dart';
 
 /// 일감 상세(목업 ③). 지도 placeholder + 작업정보 + 지원 버튼.
 /// 지원은 status 별로 apply_with_priority / apply_general / apply_designated RPC 호출.
@@ -200,7 +200,7 @@ class _Body extends StatelessWidget {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              const _MapPlaceholder(),
+              JobMap(lat: job.lat, lng: job.lng, label: job.regionName),
               Container(
                 decoration: const BoxDecoration(
                   color: AppColors.card,
@@ -601,102 +601,3 @@ class _InfoRow extends StatelessWidget {
   }
 }
 
-class _MapPlaceholder extends StatelessWidget {
-  const _MapPlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    // .map placeholder: 회녹색 배경 + 블록/도로 + 핀 + "카카오맵" 칩.
-    return Container(
-      height: 188,
-      color: AppColors.mapBg,
-      child: Stack(
-        children: [
-          // 가짜 지형 블록.
-          Positioned(left: -12, top: 14, child: _block(92, 58, const Color(0xFFDDE7DC))),
-          Positioned(right: 16, top: 8, child: _block(78, 50, const Color(0xFFE6E3D9))),
-          Positioned(left: 34, bottom: 12, child: _block(72, 46, const Color(0xFFE6E3D9))),
-          Positioned(right: -10, bottom: 20, child: _block(94, 60, const Color(0xFFDDE7DC))),
-          // 도로.
-          Positioned(left: 0, right: 0, top: 86, child: Container(height: 13, color: Colors.white)),
-          Positioned(top: 0, bottom: 0, left: 124, child: Container(width: 12, color: Colors.white)),
-          // 핀(티어드롭).
-          const Align(
-            alignment: Alignment(0, -0.1),
-            child: _MapPin(),
-          ),
-          Positioned(
-            left: 12,
-            bottom: 12,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.9),
-                borderRadius: BorderRadius.circular(7),
-                boxShadow: AppShadows.sm,
-              ),
-              child: const Text('카카오맵',
-                  style: TextStyle(
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.ink2)),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _block(double w, double h, Color c) => Container(
-        width: w,
-        height: h,
-        decoration: BoxDecoration(
-          color: c,
-          borderRadius: BorderRadius.circular(3),
-        ),
-      );
-}
-
-/// 지도 핀(.pin): 회청 티어드롭 + 흰 점.
-class _MapPin extends StatelessWidget {
-  const _MapPin();
-
-  @override
-  Widget build(BuildContext context) {
-    return Transform.rotate(
-      angle: 0.785398, // 45deg
-      child: Container(
-        width: 30,
-        height: 30,
-        decoration: const BoxDecoration(
-          color: Color(0xFF3B4456),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(15),
-            topRight: Radius.circular(15),
-            bottomLeft: Radius.circular(15),
-            bottomRight: Radius.circular(4),
-          ),
-          boxShadow: [
-            BoxShadow(
-                color: Color(0x47000000),
-                blurRadius: 12,
-                offset: Offset(0, 6)),
-          ],
-        ),
-        child: Center(
-          child: Transform.rotate(
-            angle: -0.785398,
-            child: Container(
-              width: 11,
-              height: 11,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

@@ -75,5 +75,14 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!-- 카카오맵(webview 기반) 로딩 허용. JavaScript API 가 http 리소스를 포함할 수 있어 ATS 예외 필요. -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<!-- 플랫폼 뷰(webview) 임베딩 허용. -->
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
 </dict>
 </plist>

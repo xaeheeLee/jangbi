@@ -9,7 +9,8 @@ plugins {
 
 android {
     namespace = "com.jangbinara.jangbinara"
-    compileSdk = flutter.compileSdkVersion
+    // webview_flutter_android(카카오맵 의존) 가 compileSdk 36 이상을 요구.
+    compileSdk = maxOf(flutter.compileSdkVersion, 36)
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
