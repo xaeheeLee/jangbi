@@ -284,6 +284,27 @@ class _JobCreateScreenState extends ConsumerState<JobCreateScreen> {
 
       final pw = _designatePwCtrl.text.trim();
 
+      // 주소 → 좌표(지오코딩). 서버 Edge Function(REST 키 시크릿)으로 변환.
+      // 실패해도 등록은 진행(지도는 기본 위치 fallback). KAKAO_REST_KEY 미설정 시 무시.
+      double? geoLat;
+      double? geoLng;
+      try {
+        final query = [_regionNameCtrl.text.trim(), _addressCtrl.text.trim()]
+            .where((s) => s.isNotEmpty)
+            .join(' ');
+        if (query.isNotEmpty) {
+          final res = await client.functions
+              .invoke('geocode', body: {'query': query});
+          final data = res.data;
+          if (data is Map && data['lat'] != null && data['lng'] != null) {
+            geoLat = (data['lat'] as num).toDouble();
+            geoLng = (data['lng'] as num).toDouble();
+          }
+        }
+      } catch (_) {
+        // 지오코딩 실패는 등록을 막지 않는다.
+      }
+
       final insert = <String, dynamic>{
         // job_no 는 트리거가 생성하므로 넣지 않음.
         'poster_id': uid,
@@ -294,6 +315,8 @@ class _JobCreateScreenState extends ConsumerState<JobCreateScreen> {
         'address': _addressCtrl.text.trim().isEmpty
             ? null
             : _addressCtrl.text.trim(),
+        'lat': ?geoLat,
+        'lng': ?geoLng,
         'description': _descCtrl.text.trim().isEmpty
             ? _regionNameCtrl.text.trim()
             : _descCtrl.text.trim(),
