@@ -10,6 +10,7 @@ import 'job_format.dart';
 import 'job_models.dart';
 import 'job_providers.dart';
 import 'widgets/job_map.dart';
+import 'widgets/job_photo_section.dart';
 
 /// 일감 상세(목업 ③). 지도 placeholder + 작업정보 + 지원 버튼.
 /// 지원은 status 별로 apply_with_priority / apply_general / apply_designated RPC 호출.
@@ -194,6 +195,10 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final referral = (job.amount * 0.10).round();
+    final uid = SupabaseService.client.auth.currentUser?.id;
+    // 현장 사진 인증: 배차받은 기사 본인에게만 노출.
+    final isMatchedWorker =
+        Env.isSupabaseConfigured && uid != null && job.matchedWorkerId == uid;
     return Column(
       children: [
         Expanded(
@@ -305,6 +310,11 @@ class _Body extends StatelessWidget {
                   ],
                 ),
               ),
+              if (isMatchedWorker)
+                Transform.translate(
+                  offset: const Offset(0, -8),
+                  child: JobPhotoSection(jobId: job.id),
+                ),
             ],
           ),
         ),
