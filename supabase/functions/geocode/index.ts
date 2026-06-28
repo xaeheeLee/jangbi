@@ -42,9 +42,20 @@ Deno.serve(async (req: Request) => {
         headers: { ...cors, "Content-Type": "application/json" },
       });
     }
-    // ① 주소 검색 → ② 실패 시 키워드(장소명) 검색 폴백.
-    const result = (await kakao("address.json", query, key)) ??
-      (await kakao("keyword.json", query, key));
+    // 한국 주소는 번지(123-4)가 있으면 검색이 실패하는 경우가 많다.
+    // 전체 → 끝 번지 제거 → 시/구만 순으로 점점 단순화해 재시도(동 단위까지 폴백).
+    const q0 = String(query).trim();
+    const q1 = q0.replace(/\s*\d[\d\-~/]*\s*$/, "").trim(); // 끝 번지 제거
+    const ws = q1.split(/\s+/);
+    const q2 = ws.length > 2 ? ws.slice(0, 2).join(" ") : ""; // 시/구
+    const tries = [q0, q1, q2].filter((q, i, a) => q && a.indexOf(q) === i);
+
+    let result = null;
+    for (const q of tries) {
+      result = (await kakao("address.json", q, key)) ??
+        (await kakao("keyword.json", q, key));
+      if (result) break;
+    }
     return new Response(
       JSON.stringify(result ?? { lat: null, lng: null, matched: null }),
       { headers: { ...cors, "Content-Type": "application/json" } },
